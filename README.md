@@ -1,4 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TrueFeed Frontend
+
+Next.js frontend for the TrueFeed project. Built with the Next.js App Router and Tailwind CSS.
+
+Quick start
+
+1. Install dependencies:
+
+   npm install
+
+2. Start development server:
+
+   npm run dev
+
+Available scripts
+
+- `npm run dev` — start dev server
+- `npm run build` — build for production
+- `npm run start` — run the production build
+- `npm run lint` — run ESLint
+
+Configuration
+
+- Environment variables may be defined in `.env.local`. Typical values:
+  - `NEXT_PUBLIC_API_URL` — base URL for the backend API
+
+Project structure (recommended)
+
+```
+src/
+├── app/          # App router pages & layouts
+├── components/   # Reusable components
+│   ├── modules/  # Complex, stateful components
+│   └── ui/       # Atomic UI components
+├── lib/          # Client helpers and API logic
+├── api/          # Functions that call backend endpoints
+├── hooks/        # Custom React hooks
+├── styles/       # Tailwind and global CSS
+└── public/       # Static assets
+```
+
+Notes
+
+- This project targets Next.js 13+ App Router. Adjust the layout and routing conventions if you use a different Next.js version.
+  This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
