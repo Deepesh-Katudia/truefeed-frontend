@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ROUTE_PROFILE } from "@/lib/paths";
 import { getProfile } from "@/api/profile";
 import { apiAuth } from "@/api";
+import styles from "@/styles/header.module.css";
 
 export default function Header() {
   const pathname = usePathname();
@@ -26,23 +27,23 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur">
-      <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <div className="font-semibold tracking-tight">TrueFeed</div>
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-sm text-slate-600 dark:text-slate-300 hover:underline">
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        <div className={styles.brand}>TrueFeed</div>
+        <div className={styles.actions}>
+          <Link href="/" className={styles.link}>
             Home
           </Link>
-          <Link href={ROUTE_PROFILE} className="text-sm text-slate-600 dark:text-slate-300 hover:underline">
+          <Link href={ROUTE_PROFILE} className={styles.link}>
             Profile
           </Link>
           {isAdmin && (
-            <Link href="/admin/logs" className="text-sm text-slate-600 dark:text-slate-300 hover:underline">
+            <Link href="/admin/logs" className={styles.link}>
               Admin Logs
             </Link>
           )}
           <button
-            className="text-sm text-slate-600 dark:text-slate-300 hover:underline"
+            className={`${styles.link} ${styles.buttonLink}`}
             onClick={async () => {
               const r = await apiAuth.logout();
               if (r.ok) router.replace("/login");

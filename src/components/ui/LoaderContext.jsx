@@ -45,8 +45,8 @@ export function LoaderProvider({ children }) {
     <LoaderCtx.Provider value={value}>
       {children}
       {state.visible && (
-        <div className={`${styles.overlayBackdrop} overflow-hidden pointer-events-none`}>
-          <div className={`${styles.overlayPane} pointer-events-auto`}>
+        <div className={styles.overlayBackdrop}>
+          <div className={styles.overlayPane}>
             <Loader variant={state.variant} label={state.label} subtext={state.subtext} />
           </div>
         </div>

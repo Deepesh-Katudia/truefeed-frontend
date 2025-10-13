@@ -22,12 +22,13 @@
 .fullscreenCenter { min-height: 100dvh; display: grid; place-items: center; }
 
 /* Overlay styles for LoaderContext */
-.overlayBackdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(0,0,0,0.1); }
+.overlayBackdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(0,0,0,0.1); overflow: hidden; pointer-events: none; }
 .overlayPane {
   border-radius: 0.75rem;
   background: rgb(241 245 249); /* slate-100, not white */
   padding: 1.5rem;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  pointer-events: auto;
 }
 .dark .overlayBackdrop { background: rgba(0,0,0,0.35); }
 .dark .overlayPane { background: rgb(15 23 42); }
