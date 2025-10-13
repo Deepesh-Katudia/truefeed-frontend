@@ -39,5 +39,16 @@ export async function getJson(path) {
   return res;
 }
 
+export async function postFormData(path, formData) {
+  const url = buildUrl(path);
+  const res = await fetch(url, {
+    method: "POST",
+    // Important: don't set Content-Type, browser will set boundary automatically
+    credentials: "include",
+    body: formData,
+  });
+  return res;
+}
+
 // export helper for other modules that need to build absolute URLs
 export { buildUrl };
