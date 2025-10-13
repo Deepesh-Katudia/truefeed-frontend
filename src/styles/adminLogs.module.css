@@ -1,0 +1,82 @@
+/* Admin logs page styles */
+.viewerToolbar { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.25rem; }
+@media (min-width: 640px) { .viewerToolbar { flex-direction: row; align-items: center; justify-content: space-between; } }
+.row { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; }
+.date { font-weight: 600; }
+.actions { display: inline-flex; align-items: center; gap: 0.5rem; }
+.toggleGroup { display: inline-flex; align-items: center; gap: 0.25rem; background: rgb(241 245 249); padding: 0.25rem; border-radius: 0.5rem; }
+.toggleBtn { padding: 0.25rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; }
+.toggleActive { background: rgb(226 232 240); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+.filter { max-width: 20rem; }
+.filterInput { width: 100%; padding: 0.375rem 0.75rem; font-size: 0.875rem; border: 1px solid rgb(226,232,240); border-radius: 0.375rem; background: rgb(248 250 252); color: inherit; }
+.filterInput::placeholder { color: rgb(100 116 139); }
+.dark .toggleGroup { background: rgb(30 41 59); }
+.dark .toggleActive { background: rgb(51,65,85); }
+.dark .filterInput { background: rgb(2,6,23); border-color: rgb(51,65,85); color: inherit; }
+.dark .filterInput::placeholder { color: rgb(148 163 184); }
+.controls { display: inline-flex; align-items: center; gap: 0.75rem; }
+.compactToggle { display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.75rem; opacity: 0.9; }
+.tableWrap { margin-top: 0.75rem; overflow: auto; max-height: 28rem; border: 1px solid rgb(226 232 240); border-radius: 0.5rem; }
+.dark .tableWrap { border-color: rgb(51 65 85); }
+.table { width: 100%; font-size: 0.875rem; border-collapse: collapse; table-layout: fixed; }
+.compact .th, .compact .td { padding-top: 0.35rem; padding-bottom: 0.35rem; }
+.thead { position: sticky; top: 0; background: rgb(226 232 240); }
+.dark .thead { background: rgb(30 41 59); }
+.th { text-align: left; font-weight: 600; padding: 0.5rem 0.75rem; border-bottom: 1px solid rgb(226 232 240); color: rgb(30 41 59); }
+.dark .th { border-bottom-color: rgb(51 65 85); color: rgb(226 232 240); }
+.colTime { width: 180px; }
+.colLevel { width: 90px; }
+.colMessage { width: auto; }
+.td { padding: 0.5rem 0.75rem; vertical-align: top; white-space: pre-wrap; border-bottom: 1px solid rgb(241 245 249); overflow-wrap: anywhere; }
+.dark .td { border-bottom-color: rgb(30 41 59); }
+.tdMessage { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+.trAlt { background: rgb(241 245 249); }
+.dark .trAlt { background: rgb(30 41 59); }
+
+/* Level badge */
+.badge { display: inline-flex; align-items: center; border-radius: 9999px; padding: 0.125rem 0.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em; }
+.bInfo { background: rgba(59,130,246,0.15); color: rgb(147 197 253); }
+.bWarn { background: rgba(245,158,11,0.15); color: rgb(251 191 36); }
+.bError { background: rgba(239,68,68,0.15); color: rgb(252 165 165); }
+.dark .bInfo { background: rgba(59,130,246,0.2); color: rgb(147 197 253); }
+.dark .bWarn { background: rgba(245,158,11,0.2); color: rgb(251 191 36); }
+.dark .bError { background: rgba(239,68,68,0.2); color: rgb(252 165 165); }
+
+/* System dark fallback when .dark class isn't present */
+@media (prefers-color-scheme: dark) {
+	.toggleGroup { background: rgb(30 41 59); }
+	.toggleActive { background: rgb(51 65 85); }
+	.filterInput { background: rgb(2 6 23); border-color: rgb(51 65 85); color: inherit; }
+	.filterInput::placeholder { color: rgb(148 163 184); }
+	.tableWrap { border-color: rgb(51 65 85); }
+	.thead { background: rgb(30 41 59); }
+	.th { border-bottom-color: rgb(51 65 85); color: rgb(226 232 240); }
+	.td { border-bottom-color: rgb(30 41 59); }
+	.trAlt { background: rgb(30 41 59); }
+}
+
+/* Raw view block */
+.rawPre {
+	margin-top: 0.75rem;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	background: rgb(248 250 252);
+	color: rgb(30 41 59);
+	padding: 1rem;
+	border-radius: 0.5rem;
+	border: 1px solid rgb(226 232 240);
+	max-height: 28rem;
+	overflow: auto;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-size: 0.875rem;
+	line-height: 1.5;
+}
+.dark .rawPre {
+	background: rgb(17 24 39);
+	color: rgb(226 232 240);
+	border-color: rgb(51 65 85);
+}
+
+/* Download link styled like a button */
+.downloadBtn { display: inline-flex; align-items: center; font-size: 0.875rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 0.375rem; background: rgb(5,150,105); color: white; text-decoration: none; }
+.downloadBtn:hover { background: rgb(16,185,129); }

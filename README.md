@@ -21,8 +21,8 @@ Available scripts
 
 Configuration
 
-- Environment variables may be defined in `.env.local`. Typical values:
-  - `NEXT_PUBLIC_API_URL` — base URL for the backend API
+- Copy `.env.example` to `.env.local` and edit the values for your environment. Typical values:
+  - `NEXT_PUBLIC_API_URL` — base URL for the backend API (e.g. `http://localhost:4000`)
 
 Project structure (recommended)
 

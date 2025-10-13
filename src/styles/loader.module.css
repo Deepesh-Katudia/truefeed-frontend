@@ -1,0 +1,39 @@
+/* Loader styles with theme colors */
+.spinner {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 9999px;
+  animation: spin 1s linear infinite;
+}
+.label { font-size: 0.875rem; font-weight: 500; }
+.subtext { font-size: 0.75rem; opacity: 0.8; margin-top: 0.125rem; }
+.container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; }
+
+/* themes */
+.t_default { color: rgb(79 70 229); }
+.t_admin { color: rgb(124 58 237); }
+.t_auth { color: rgb(2 132 199); }
+.t_profile { color: rgb(5 150 105); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Fullscreen centering helper for route-level loader */
+.fullscreenCenter { min-height: 100dvh; display: grid; place-items: center; }
+
+/* Overlay styles for LoaderContext */
+.overlayBackdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(0,0,0,0.1); }
+.overlayPane {
+  border-radius: 0.75rem;
+  background: rgb(241 245 249); /* slate-100, not white */
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+}
+.dark .overlayBackdrop { background: rgba(0,0,0,0.35); }
+.dark .overlayPane { background: rgb(15 23 42); }
+
+/* System dark-mode fallback if no `.dark` class is present */
+@media (prefers-color-scheme: dark) {
+  .overlayBackdrop { background: rgba(0,0,0,0.35); }
+  .overlayPane { background: rgb(15 23 42); color: rgb(226 232 240); }
+}

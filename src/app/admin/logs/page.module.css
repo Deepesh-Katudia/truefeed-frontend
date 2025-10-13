@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+.container { @apply p-6; }
+.title { @apply text-2xl font-semibold mb-4; }
+.error { @apply text-red-500; }
+
+.stack4 > * + * { @apply mt-4; }
+.stack2 > * + * { @apply mt-2; }
+
+.itemRow { @apply py-4 flex items-center justify-between; }
+.downloadLink { @apply inline-flex items-center text-sm px-3 py-2 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white; }
+
+.toggle { @apply inline-flex items-center gap-2 rounded-md bg-slate-100 dark:bg-slate-800 p-1; }
+.toggleButton { @apply px-3 py-1 text-sm rounded; }
+.toggleActive { @apply bg-white dark:bg-slate-700 shadow; }
+
+.filterWrap { @apply max-w-xs; }
+.filterInput { @apply w-full px-3 py-1.5 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm; }
+
+.tableWrap { @apply mt-3 overflow-auto max-h-[28rem]; }
+.table { @apply w-full text-sm; }
+.thead { @apply sticky top-0 bg-slate-50 dark:bg-slate-900; }
+.th { @apply text-left font-semibold px-3 py-2 border-b border-slate-200 dark:border-slate-800; }
+.td { @apply px-3 py-2 align-top whitespace-pre-wrap; }
+.zebra { @apply bg-slate-50/60 dark:bg-slate-900/40; }
+
+.preRaw { @apply mt-3 whitespace-pre-wrap bg-slate-100 dark:bg-slate-800 p-4 rounded max-h-96 overflow-auto; }
+.actionsRow { @apply mt-3 flex items-center gap-2; }
+.viewingTitle { @apply font-medium; }
