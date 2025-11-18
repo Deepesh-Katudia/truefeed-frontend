@@ -8,6 +8,8 @@ import Loader, { InlineLoader } from "@/components/ui/Loader";
 import Input from "@/components/ui/Input";
 import MainContainer from "@/components/ui/MainContainer";
 import Card, { CardHeader, CardContent } from "@/components/ui/Card";
+import authStyles from "../auth.module.css";
+import Brand from "@/components/ui/Brand";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -44,27 +46,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <MainContainer className="bg-slate-950 text-slate-100 px-4">
-      <Card className="max-w-md">
-        <CardHeader>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            TrueFeed — Auth
-          </h1>
-          <p className="mt-1 text-sm text-slate-400">Create your account</p>
+    <MainContainer className={authStyles.authRoot}>
+      <Card className={authStyles.card}>
+        <CardHeader className={authStyles.header}>
+          <Brand as="h1" className={authStyles.brandTitle}>
+            TrueFeed
+          </Brand>
+          <p className={authStyles.subtitle}>Create your account</p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4" noValidate>
+          <form onSubmit={onSubmit} className={authStyles.form} noValidate>
             {error && (
-              <div
-                role="alert"
-                className="rounded-md border border-red-700/50 bg-red-900/30 px-3 py-2 text-sm text-red-200"
-              >
+              <div role="alert" className={authStyles.alert}>
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm mb-1" htmlFor="name">
+              <label className={authStyles.label} htmlFor="name">
                 Name
               </label>
               <Input
@@ -78,7 +77,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm mb-1" htmlFor="email">
+              <label className={authStyles.label} htmlFor="email">
                 Email
               </label>
               <Input
@@ -94,7 +93,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm mb-1" htmlFor="password">
+              <label className={authStyles.label} htmlFor="password">
                 Password
               </label>
               <Input
@@ -108,7 +107,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className={authStyles.actionsRow}>
               <Button
                 type="submit"
                 disabled={loading}
@@ -117,10 +116,7 @@ export default function RegisterPage() {
               >
                 Register
               </Button>
-              <a
-                href={ROUTE_LOGIN}
-                className="text-sm text-indigo-300 hover:underline"
-              >
+              <a href={ROUTE_LOGIN} className={authStyles.link}>
                 Already have an account?
               </a>
             </div>

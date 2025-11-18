@@ -6,6 +6,8 @@ import { ROUTE_PROFILE } from "@/lib/paths";
 import { getProfile } from "@/api/profile";
 import { apiAuth } from "@/api";
 import styles from "@/styles/header.module.css";
+import Brand from "@/components/ui/Brand";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function Header() {
   const pathname = usePathname();
@@ -29,8 +31,9 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
-        <div className={styles.brand}>TrueFeed</div>
+        <Brand />
         <div className={styles.actions}>
+          <ThemeToggle />
           <Link href="/" className={styles.link}>
             Home
           </Link>

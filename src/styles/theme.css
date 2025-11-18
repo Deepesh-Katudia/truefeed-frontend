@@ -1,0 +1,47 @@
+/* Centralized theme tokens: colors, fonts, and common settings */
+
+:root {
+  /* Fonts */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-brand: 'Brittany', var(--font-sans);
+
+  /* Colors (light) */
+  --color-bg: rgb(248 250 252); /* slate-50 */
+  --color-text: rgb(15 23 42); /* slate-900 */
+  --color-muted: rgb(71 85 105); /* slate-600 */
+  --color-border: rgb(226 232 240); /* slate-200 */
+  --color-surface: rgb(248 250 252); /* same as bg, override per component */
+  --color-surface-soft: rgba(255, 255, 255, 0.8); /* translucent header */
+  --color-selection-bg: rgb(199 210 254); /* indigo-200 */
+  --color-selection-text: rgb(30 27 75); /* indigo-900 */
+  --color-accent: #a5b4fc; /* indigo-300 */
+}
+
+/* Auto dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: rgb(2 6 23); /* slate-950 */
+    --color-text: rgb(226 232 240); /* slate-200 */
+    --color-muted: rgb(203 213 225); /* slate-300 */
+    --color-border: rgb(30 41 59); /* slate-800 */
+    --color-surface: rgb(15 23 42); /* slate-900 */
+    --color-surface-soft: rgba(2, 6, 23, 0.8);
+    --color-selection-bg: rgb(165 180 252); /* indigo-300 */
+    --color-selection-text: rgb(15 23 42); /* slate-900 */
+    /* accent can stay readable in both */
+  }
+}
+
+/* Optional: support explicit .dark class toggling */
+.dark {
+  --color-bg: rgb(2 6 23);
+  --color-text: rgb(226 232 240);
+  --color-muted: rgb(203 213 225);
+  --color-border: rgb(30 41 59);
+  --color-surface: rgb(15 23 42);
+  --color-surface-soft: rgba(2, 6, 23, 0.8);
+  --color-selection-bg: rgb(165 180 252);
+  --color-selection-text: rgb(15 23 42);
+}

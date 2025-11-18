@@ -84,23 +84,19 @@ function PostItem({ post, user }) {
   }, [post.mediaUrl]);
 
   return (
-    <div className="py-5 border-b border-slate-200 dark:border-slate-700">
+    <div className="py-5 border-b border-border">
       <div className="flex items-start gap-5 md:gap-6">
         <Avatar name={user?.name} picture={user?.picture} size={40} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+            <span className="font-semibold text-text truncate">
               {user?.name || "You"}
             </span>
-            <span className="text-slate-500 dark:text-slate-400">•</span>
-            <span className="text-slate-500 dark:text-slate-400">
-              {timeAgo(post.createdAt)}
-            </span>
+            <span className="text-muted">•</span>
+            <span className="text-muted">{timeAgo(post.createdAt)}</span>
           </div>
           {post.content && (
-            <p className="mt-2 text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
-              {post.content}
-            </p>
+            <p className="mt-2 text-text whitespace-pre-wrap">{post.content}</p>
           )}
         </div>
       </div>
@@ -124,7 +120,7 @@ function PostItem({ post, user }) {
           ) : (
             <a
               href={buildUrl(post.mediaUrl)}
-              className="text-indigo-600 hover:underline text-sm"
+              className="text-accent hover:underline text-sm"
               target="_blank"
               rel="noreferrer"
             >
@@ -133,14 +129,14 @@ function PostItem({ post, user }) {
           )}
         </div>
       )}
-      <div className="mt-3 flex items-center gap-6 text-sm text-slate-500">
-        <button className="inline-flex items-center gap-2 hover:text-slate-700 dark:hover:text-slate-300">
+      <div className="mt-3 flex items-center gap-6 text-sm text-muted">
+        <button className="inline-flex items-center gap-2 hover:text-text">
           <LikeIcon /> <span>Like</span>
         </button>
-        <button className="inline-flex items-center gap-2 hover:text-slate-700 dark:hover:text-slate-300">
+        <button className="inline-flex items-center gap-2 hover:text-text">
           <CommentIcon /> <span>Comment</span>
         </button>
-        <button className="inline-flex items-center gap-2 hover:text-slate-700 dark:hover:text-slate-300">
+        <button className="inline-flex items-center gap-2 hover:text-text">
           <ShareIcon /> <span>Share</span>
         </button>
       </div>
@@ -228,12 +224,10 @@ export default function Home() {
                 <div className="flex items-center gap-5 md:gap-6">
                   <Avatar name={user?.name} picture={user?.picture} size={40} />
                   <div className="min-w-0">
-                    <div className="text-slate-900 dark:text-slate-100 font-semibold truncate">
+                    <div className="text-text font-semibold truncate">
                       {user?.name}
                     </div>
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                      Create a post
-                    </div>
+                    <div className="text-sm text-muted">Create a post</div>
                   </div>
                 </div>
               </CardHeader>
@@ -243,7 +237,7 @@ export default function Home() {
                 )}
                 <form onSubmit={handleCreate} className="space-y-3">
                   <textarea
-                    className="w-full min-h-[120px] p-3 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                    className="w-full min-h-[120px] p-3 rounded-md border border-border bg-surface text-text"
                     placeholder="What's on your mind?"
                     value={content}
                     maxLength={2000}
@@ -261,7 +255,7 @@ export default function Home() {
                       }}
                     />
                     {file && (
-                      <span className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                      <span className="chip">
                         {file?.type?.startsWith("image/") ? (
                           <ImageIcon />
                         ) : (
@@ -270,7 +264,7 @@ export default function Home() {
                         {file.name}
                       </span>
                     )}
-                    <div className="text-xs text-slate-500 dark:text-slate-400 ml-auto">
+                    <div className="text-xs text-muted ml-auto">
                       {content.length}/2000
                     </div>
                     <Button
@@ -323,9 +317,7 @@ export default function Home() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  Your posts
-                </h2>
+                <h2 className="text-lg font-semibold text-text">Your posts</h2>
                 <Button
                   variant="secondary"
                   onClick={refreshPosts}
@@ -343,19 +335,19 @@ export default function Home() {
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="animate-pulse space-y-3">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700" />
+                        <div className="h-10 w-10 rounded-full bg-surface-soft" />
                         <div className="flex-1">
-                          <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3" />
-                          <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/5 mt-1" />
+                          <div className="h-4 bg-surface-soft rounded w-1/3" />
+                          <div className="h-3 bg-surface-soft rounded w-1/5 mt-1" />
                         </div>
                       </div>
-                      <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-2/3" />
-                      <div className="h-48 bg-slate-200 dark:bg-slate-700 rounded" />
+                      <div className="h-3 bg-surface-soft rounded w-2/3" />
+                      <div className="h-48 bg-surface-soft rounded" />
                     </div>
                   ))}
                 </div>
               ) : posts.length === 0 ? (
-                <div className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="text-sm text-muted">
                   You haven’t posted anything yet. Share your first update
                   above!
                 </div>
@@ -369,7 +361,7 @@ export default function Home() {
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+              <h3 className="text-base font-semibold text-text">
                 Your profile
               </h3>
             </CardHeader>
@@ -377,23 +369,23 @@ export default function Home() {
               <div className="flex items-center gap-5">
                 <Avatar name={user?.name} picture={user?.picture} size={48} />
                 <div className="min-w-0">
-                  <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+                  <div className="font-semibold text-text truncate">
                     {user?.name}
                   </div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400 truncate">
+                  <div className="text-sm text-muted truncate">
                     {user?.email}
                   </div>
                 </div>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-md border border-slate-200 dark:border-slate-700 p-3 text-center">
-                  <div className="text-xs text-slate-500">Posts</div>
-                  <div className="inline-flex items-center gap-2 text-xs bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2 py-1 rounded-full">
+                <div className="rounded-md border border-border p-3 text-center">
+                  <div className="text-xs text-muted">Posts</div>
+                  <div className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full border border-border text-muted">
                     {posts.length} total
                   </div>
                 </div>
-                <div className="rounded-md border border-slate-200 dark:border-slate-700 p-3 text-center">
-                  <div className="text-xs text-slate-500">Since</div>
+                <div className="rounded-md border border-border p-3 text-center">
+                  <div className="text-xs text-muted">Since</div>
                   <div className="text-sm">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </div>

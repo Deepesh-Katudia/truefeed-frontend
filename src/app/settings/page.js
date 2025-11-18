@@ -62,7 +62,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                <h2 className="text-xl font-semibold text-text">
                   Profile settings
                 </h2>
                 <Button
@@ -101,7 +101,7 @@ export default function SettingsPage() {
                 className="space-y-5"
               >
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-sm font-medium text-text mb-1">
                     Phone
                   </label>
                   <Input
@@ -110,37 +110,35 @@ export default function SettingsPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-muted">
                     Optional. Visible on your profile.
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-sm font-medium text-text mb-1">
                     About you
                   </label>
                   <textarea
-                    className="w-full min-h-[100px] p-3 rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                    className="w-full min-h-[100px] p-3 rounded-md border border-border bg-surface text-text"
                     placeholder="Tell others about yourself"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     maxLength={1000}
                   />
                   <div className="flex items-center justify-between mt-1">
-                    <p className="text-xs text-slate-500">
-                      Max 1000 characters.
-                    </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-muted">Max 1000 characters.</p>
+                    <p className="text-xs text-muted">
                       {description.length}/1000
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                  <label className="block text-sm font-medium text-text mb-1">
                     Profile picture
                   </label>
                   {user?.picture && (
                     <div className="mb-2">
-                      <div className="text-xs text-slate-500 mb-1">Current</div>
+                      <div className="text-xs text-muted mb-1">Current</div>
                       <Image
                         src={buildUrl(user.picture)}
                         alt="Current picture"
@@ -154,7 +152,7 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-3">
                     <label
                       htmlFor="picture-input"
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-100 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-surface-soft text-text cursor-pointer"
                     >
                       <ImageIcon /> Choose image
                     </label>
@@ -168,7 +166,7 @@ export default function SettingsPage() {
                       }
                     />
                     {pictureFile && (
-                      <span className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                      <span className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded-full bg-surface-soft text-muted">
                         {pictureFile.name}
                         <button
                           type="button"
@@ -182,7 +180,7 @@ export default function SettingsPage() {
                   </div>
                   {picturePreview && (
                     <div className="mt-2">
-                      <div className="text-xs text-slate-500 mb-1">Preview</div>
+                      <div className="text-xs text-muted mb-1">Preview</div>
                       <Image
                         src={picturePreview}
                         alt="Preview"

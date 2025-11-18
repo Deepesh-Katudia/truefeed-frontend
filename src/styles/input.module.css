@@ -4,11 +4,18 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
-  background-color: rgba(2,6,23,0.6);
-  border: 1px solid rgb(51,65,85);
-  color: inherit;
+  background-color: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
 }
-.input::placeholder { color: rgb(100,116,139); }
-.input:focus { outline: none; box-shadow: 0 0 0 2px rgba(99,102,241,0.6); }
+.input::placeholder { color: var(--color-muted); }
+.input:focus {
+  outline: none;
+  /* Fallback ring */
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.35);
+  /* Preferred ring using theme accent, a bit subtler */
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  border-color: var(--color-accent);
+}
 .rightPad { padding-right: 2.5rem; }
 .adornment { position: absolute; inset-block: 0; right: 0.5rem; margin-block: auto; display: flex; align-items: center; }

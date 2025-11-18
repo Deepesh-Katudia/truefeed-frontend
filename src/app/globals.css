@@ -1,4 +1,19 @@
 @import "tailwindcss";
+@import "../styles/theme.css";
+
+/* Utility classes bound to theme variables for easy Tailwind-like usage */
+.bg-bg { background-color: var(--color-bg); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-surface-soft { background-color: var(--color-surface-soft); }
+.text-text { color: var(--color-text); }
+.text-muted { color: var(--color-muted); }
+.border-border { border-color: var(--color-border); }
+.font-brand { font-family: var(--font-brand); }
+.text-accent { color: var(--color-accent); }
+.bg-accent { background-color: var(--color-accent); }
+
+/* Chips/pills using theme variables */
+.chip { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; line-height: 1rem; padding: 0.25rem 0.5rem; border-radius: 9999px; background-color: var(--color-surface); color: var(--color-muted); border: 1px solid var(--color-border); }
 
 /* Minimal, clean base styles without @apply for compatibility */
 html,
@@ -6,11 +21,21 @@ body {
   height: 100%;
 }
 
+/* Custom handwritten brand font — place BrittanySignature.ttf at /public/fonts/BrittanySignature.ttf */
+@font-face {
+  font-family: 'Brittany';
+  src: url('/fonts/BrittanySignature.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(248 250 252); /* slate-50 */
-  color: rgb(15 23 42); /* slate-900 */
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 /* Lock scroll when loader overlay is open */
@@ -20,14 +45,6 @@ body.loader-open {
   height: 100vh;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: rgb(2 6 23); /* slate-950 */
-    color: rgb(226 232 240); /* slate-200 */
-  }
-}
+/* dark mode handled via variables in theme.css */
 
-::selection {
-  background-color: rgb(199 210 254); /* indigo-200 */
-  color: rgb(30 27 75); /* indigo-900 */
-}
+::selection { background-color: var(--color-selection-bg); color: var(--color-selection-text); }

@@ -7,6 +7,9 @@ import Button from "@/components/ui/Button";
 import Loader, { InlineLoader } from "@/components/ui/Loader";
 import Input from "@/components/ui/Input";
 import MainContainer from "@/components/ui/MainContainer";
+import headerStyles from "@/styles/header.module.css";
+import authStyles from "../auth.module.css";
+import Brand from "@/components/ui/Brand";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,27 +47,24 @@ export default function LoginPage() {
   }
 
   return (
-    <MainContainer className="bg-slate-950 text-slate-100 px-4">
-      <div className="w-full max-w-md rounded-xl border border-slate-800/80 bg-slate-900/60 p-6 shadow-2xl backdrop-blur">
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            TrueFeed — Auth
-          </h1>
-          <p className="mt-1 text-sm text-slate-400">Sign in to continue</p>
+    <MainContainer className={authStyles.authRoot}>
+      <div className={authStyles.card}>
+        <div className={authStyles.header}>
+          <Brand as="h1" className={authStyles.brandTitle}>
+            TrueFeed
+          </Brand>
+          <p className={authStyles.subtitle}>Sign in to continue</p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
+        <form onSubmit={onSubmit} className={authStyles.form} noValidate>
           {error && (
-            <div
-              role="alert"
-              className="rounded-md border border-red-700/50 bg-red-900/30 px-3 py-2 text-sm text-red-200"
-            >
+            <div role="alert" className={authStyles.alert}>
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm mb-1" htmlFor="email">
+            <label className={authStyles.label} htmlFor="email">
               Email
             </label>
             <Input
@@ -82,10 +82,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm mb-1" htmlFor="password">
+            <label className={authStyles.label} htmlFor="password">
               Password
             </label>
-            <div className="relative">
+            <div className={authStyles.passwordField}>
               <Input
                 id="password"
                 name="password"
@@ -94,13 +94,13 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Your password"
-                className="pr-10"
+                className={authStyles.hasToggle}
                 required
               />
               <button
                 type="button"
                 aria-label={showPassword ? "Hide password" : "Show password"}
-                className="absolute inset-y-0 right-2 my-auto px-2 text-slate-400 hover:text-slate-200 text-xs"
+                className={authStyles.togglePassword}
                 onClick={() => setShowPassword((v) => !v)}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -108,7 +108,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className={authStyles.actionsRow}>
             <Button
               type="submit"
               disabled={loading}
@@ -118,10 +118,7 @@ export default function LoginPage() {
               Login
             </Button>
 
-            <a
-              href={ROUTE_REGISTER}
-              className="text-sm text-indigo-300 hover:underline"
-            >
+            <a href={ROUTE_REGISTER} className={authStyles.link}>
               Create account
             </a>
           </div>

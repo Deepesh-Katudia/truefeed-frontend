@@ -77,13 +77,11 @@ export default function ProfilePage() {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 truncate">
+                  <h3 className="text-xl font-semibold text-text truncate">
                     {user.name}
                   </h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-300 truncate">
-                    {user.email}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="text-sm text-muted truncate">{user.email}</p>
+                  <p className="mt-1 text-xs text-muted">
                     Joined {timeAgo(user.createdAt)}
                   </p>
                 </div>
@@ -94,22 +92,20 @@ export default function ProfilePage() {
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {user.description && (
                     <div>
-                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">
+                      <div className="text-xs uppercase tracking-wide text-muted mb-1">
                         About
                       </div>
-                      <p className="text-sm text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
+                      <p className="text-sm text-text whitespace-pre-wrap">
                         {user.description}
                       </p>
                     </div>
                   )}
                   {user.phone && (
                     <div>
-                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">
+                      <div className="text-xs uppercase tracking-wide text-muted mb-1">
                         Phone
                       </div>
-                      <p className="text-sm text-slate-800 dark:text-slate-100">
-                        {user.phone}
-                      </p>
+                      <p className="text-sm text-text">{user.phone}</p>
                     </div>
                   )}
                 </div>
@@ -133,12 +129,10 @@ export default function ProfilePage() {
 
         <Card>
           <CardHeader>
-            <h4 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-              Quick actions
-            </h4>
+            <h4 className="text-base font-semibold text-text">Quick actions</h4>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-6 text-sm text-slate-600 dark:text-slate-300">
+            <div className="flex items-center gap-6 text-sm text-muted">
               <span className="inline-flex items-center gap-2">
                 <LikeIcon /> Like something
               </span>
