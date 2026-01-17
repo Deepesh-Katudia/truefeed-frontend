@@ -5,6 +5,7 @@ import { getFileUrl, toAbsoluteUrl, postAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
 import { Heart, MessageSquare } from 'lucide-react';
+import { motion } from "framer-motion";
 
 interface Post {
   _id: string;
@@ -142,7 +143,9 @@ export function PostCard({ post }: PostCardProps) {
             }}
             className={`flex items-center gap-2 ${liked ? 'text-red-600' : 'text-gray-600 hover:text-blue-500'} transition-colors`}
           >
-            <Heart className={`w-5 h-5 ${liked ? 'fill-red-600' : ''}`} />
+            <motion.button whileTap={{ scale: 0.92 }} whileHover={{ scale: 1.03 }}>
+  ❤️ Like
+</motion.button>
             <span className="text-sm font-medium">{likesCount}</span>
           </button>
           <div className="flex-1">
