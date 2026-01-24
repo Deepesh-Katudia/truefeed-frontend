@@ -1,123 +1,169 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Users, FileText, User, LogOut } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { useRouter, usePathname } from 'next/navigation';
-import { toAbsoluteUrl } from '@/lib/api';
+import { useEffect, useState } from "react";
+import { Users, FileText, User, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter, usePathname } from "next/navigation";
+import { toAbsoluteUrl } from "@/lib/api";
+import { motion } from "framer-motion";
 
 export function Sidebar() {
-  const [activeItem, setActiveItem] = useState('News Feed');
+  const [activeItem, setActiveItem] = useState("News Feed");
   const { user, logout } = useAuth();
   const router = useRouter();
   const path = usePathname();
+
   useEffect(() => {
     if (!path) return;
-    if (path.startsWith('/people')) {
-      setActiveItem('People');
-    } else if (path.startsWith('/profile')) {
-      setActiveItem('Profile');
-    } else {
-      setActiveItem('News Feed');
-    }
+    if (path.startsWith("/people")) setActiveItem("People");
+    else if (path.startsWith("/profile")) setActiveItem("Profile");
+    else setActiveItem("News Feed");
   }, [path]);
 
   const handleLogout = async () => {
     await logout();
-    router.push('/login');
+    router.push("/login");
   };
 
   const handleNavigation = (label: string) => {
     setActiveItem(label);
-    
-    // Navigate based on menu item
-    if (label === 'Profile') {
-      router.push('/profile');
-    } else if (label === 'News Feed') {
-      router.push('/dashboard');
-    } else if (label === 'People') {
-      router.push('/people');
-    }
-    // Add more routes as needed
+    if (label === "Profile") router.push("/profile");
+    else if (label === "News Feed") router.push("/dashboard");
+    else if (label === "People") router.push("/people");
   };
 
   const menuItems = [
-    { icon: Users, label: 'People', badge: null },
-    { icon: FileText, label: 'News Feed', badge: null },
-    { icon: User, label: 'Profile', badge: null },
+    { icon: Users, label: "People" },
+    { icon: FileText, label: "News Feed" },
+    { icon: User, label: "Profile" },
   ];
 
   return (
-    <aside className="w-72 bg-gray-00 border-r border-gray-900 px-6 py-6 flex flex-col h-screen sticky top-0">
-      {/* Logo */}
-      <div className="flex items-center gap-2 mb-8">
-        <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-          <span className="text-white text-lg font-bold">T</span>
-        </div>
-        <span className="text-xl font-bold text-shadow-white">TrueFeed</span>
-      </div>
-
-      {/* User Profile */}
-      <div 
-        className="flex items-center gap-4 mb-6 pb-5 bg-amber-700 border-black cursor-pointer hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg transition-colors"
-        onClick={() => router.push('/profile')}
+    <aside className="w-72 h-screen sticky top-0 p-6">
+      {/* Glass container */}
+      <motion.div
+        initial={{ opacity: 0, x: -14 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 24 }}
+        className="h-full rounded-3xl border border-black/10 bg-white/60 backdrop-blur-xl shadow-xl shadow-black/5 flex flex-col overflow-hidden"
       >
-        <img
-          src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'default'}`}
-          alt={user?.name || user?.email || 'User'}
-          className="w-12 h-12 rounded-full"
-        />
-        <div className="flex-1">
-          <div className="font-semibold text-gray-900">
-            {user?.name || 'Anonymous User'}
-          </div>
-          <div className="text-sm text-gray-900">
-            @{user?.email?.split('@')[0] || 'user'}
+        {/* Top brand strip */}
+        <div className="px-5 pt-5 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-indigo-500/20">
+              <span className="text-white text-lg font-bold">T</span>
+            </div>
+            <div className="leading-tight">
+              <div className="text-lg font-bold text-neutral-900">TrueFeed</div>
+              <div className="text-xs text-neutral-500">AI-powered social</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation Menu */}
-      <nav className="flex-1">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.label === activeItem;
+        {/* Accent line */}
+        <div className="h-[3px] w-full bg-gradient-to-r from-amber-400 via-pink-400 to-sky-400" />
 
-          return (
-            <button
-              key={item.label}
-              onClick={() => handleNavigation(item.label)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-colors relative ${
-                isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r" />
-              )}
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
-              {item.badge && (
-                <span className="ml-auto w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
-                  {item.badge}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+        {/* User card */}
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => router.push("/profile")}
+          className="mx-5 mt-5 flex items-center gap-3 rounded-2xl border border-black/10 bg-white/70 px-3 py-3 text-left shadow-md shadow-black/5"
+        >
+          <img
+            src={
+              toAbsoluteUrl(user?.picture) ||
+              `https://i.pravatar.cc/150?u=${user?.email || "default"}`
+            }
+            alt={user?.name || user?.email || "User"}
+            className="w-12 h-12 rounded-xl object-cover border border-black/10"
+          />
+          <div className="min-w-0">
+            <div className="font-semibold text-neutral-900 truncate">
+              {user?.name || "Anonymous User"}
+            </div>
+            <div className="text-sm text-neutral-600 truncate">
+              @{user?.email?.split("@")[0] || "user"}
+            </div>
+          </div>
+        </motion.button>
 
-      {/* Logout Button */}
-      <button
-        onClick={handleLogout}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors mb-4"
-      >
-        <LogOut className="w-5 h-5" />
-        <span className="font-medium">Logout</span>
-      </button>
+        {/* Nav */}
+        <nav className="mt-6 flex-1 px-3">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = item.label === activeItem;
 
-      
+            return (
+              <motion.button
+                key={item.label}
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleNavigation(item.label)}
+                className={[
+                  "group relative w-full flex items-center gap-3 rounded-2xl px-4 py-3 mb-2 transition",
+                  isActive
+                    ? "bg-white/80 border border-black/10 shadow-sm"
+                    : "hover:bg-white/60",
+                ].join(" ")}
+              >
+                {/* Active gradient bar */}
+                {isActive && (
+                  <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-full bg-gradient-to-b from-blue-600 to-indigo-600" />
+                )}
+
+                <div
+                  className={[
+                    "w-9 h-9 rounded-xl flex items-center justify-center border border-black/10 transition",
+                    isActive
+                      ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-indigo-500/20"
+                      : "bg-white/70 text-neutral-700 group-hover:bg-white",
+                  ].join(" ")}
+                >
+                  <Icon className="w-5 h-5" />
+                </div>
+
+                <div className="flex-1 text-left">
+                  <div
+                    className={[
+                      "font-semibold transition",
+                      isActive ? "text-neutral-900" : "text-neutral-700",
+                    ].join(" ")}
+                  >
+                    {item.label}
+                  </div>
+                  <div className="text-xs text-neutral-500">
+                    {item.label === "News Feed"
+                      ? "See latest posts"
+                      : item.label === "People"
+                      ? "Find friends"
+                      : "Your profile"}
+                  </div>
+                </div>
+              </motion.button>
+            );
+          })}
+        </nav>
+
+        {/* Logout */}
+        <div className="p-5 pt-3">
+          <motion.button
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-red-700 hover:bg-red-500/15 transition"
+          >
+            <div className="w-9 h-9 rounded-xl bg-white/70 border border-red-500/20 flex items-center justify-center">
+              <LogOut className="w-5 h-5" />
+            </div>
+            <span className="font-semibold">Logout</span>
+          </motion.button>
+
+          <div className="mt-4 text-[11px] text-neutral-500 px-1">
+            Tip: Use the Create button to post with AI fact-checking.
+          </div>
+        </div>
+      </motion.div>
     </aside>
   );
 }
