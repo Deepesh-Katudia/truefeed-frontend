@@ -48,18 +48,18 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-72 bg-white border-r border-gray-100 px-6 py-6 flex flex-col h-screen sticky top-0">
+    <aside className="w-72 bg-gray-00 border-r border-gray-900 px-6 py-6 flex flex-col h-screen sticky top-0">
       {/* Logo */}
       <div className="flex items-center gap-2 mb-8">
         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
           <span className="text-white text-lg font-bold">T</span>
         </div>
-        <span className="text-xl font-bold text-gray-900">TrueFeed</span>
+        <span className="text-xl font-bold text-shadow-white">TrueFeed</span>
       </div>
 
       {/* User Profile */}
       <div 
-        className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg transition-colors"
+        className="flex items-center gap-4 mb-6 pb-5 bg-amber-700 border-black cursor-pointer hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg transition-colors"
         onClick={() => router.push('/profile')}
       >
         <img
@@ -71,7 +71,7 @@ export function Sidebar() {
           <div className="font-semibold text-gray-900">
             {user?.name || 'Anonymous User'}
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-900">
             @{user?.email?.split('@')[0] || 'user'}
           </div>
         </div>

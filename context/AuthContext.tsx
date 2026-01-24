@@ -55,15 +55,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signup = async (email: string, password: string, name?: string) => {
-    try {
-      const data = await authAPI.register(email, password, name);
-      setUser(data);
-      return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.message };
-    }
-  };
+const signup = async (email: string, password: string, name?: string) => {
+  try {
+    await authAPI.register(email, password, name);
+
+    // Ensure we load the authenticated user exactly like login does
+    await checkAuth();
+
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error?.message || 'Signup failed' };
+  }
+};
 
   const logout = async () => {
     try {
