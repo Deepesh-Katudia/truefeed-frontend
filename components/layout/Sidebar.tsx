@@ -39,7 +39,7 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="w-72 h-screen sticky top-0 p-6">
+    <aside className="w-85 h-screen sticky top-0 p-6">
       {/* Glass container */}
       <motion.div
         initial={{ opacity: 0, x: -14 }}
