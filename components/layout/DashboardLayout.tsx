@@ -10,7 +10,7 @@ import { Contacts } from '../right-panel/Contacts';
 export function DashboardLayout() {
   const { user } = useAuth();
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-amber-100">
       <div className="flex max-w-[1920px] mx-auto">
         {/* Left Sidebar - Fixed Width */}
         <Sidebar />
@@ -25,7 +25,7 @@ export function DashboardLayout() {
         </div>
 
         {/* Right Panel - Fixed Width */}
-        <aside className="w-80 px-6 py-6 bg-white border-l border-gray-100 flex-shrink-0">
+        <aside className="w-80 px-6 py-6 bg-amber-100 border-2 border-black flex-col">
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 mb-6">
             <button

@@ -13,6 +13,7 @@ export default function SignupPage() {
   const { signup } = useAuth();
   
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
   });
@@ -43,7 +44,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const result = await signup(formData.email, formData.password);
+      const result = await signup(formData.email, formData.password, formData.name);
       if (result.success) {
         router.push('/dashboard');
       } else {
@@ -76,6 +77,19 @@ export default function SignupPage() {
             {apiError}
           </div>
         )}
+
+        <label className="text-sm font-medium text-gray-700">Your name</label>
+        <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        placeholder="Your name"
+        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3  text-sm text-gray-900 placeholder:text-gray-400 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+        required
+      />
+
+
 
         <Input
           label="Your email"
