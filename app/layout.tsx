@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat  } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   title: "TrueFeed - AI-Powered Social Media",
