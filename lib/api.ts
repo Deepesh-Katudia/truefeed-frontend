@@ -3,17 +3,14 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 // Generic fetch wrapper
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     credentials: 'include',
+    cache: 'no-store', // IMPORTANT
     headers: isFormData
-      ? {
-          ...(options.headers || {}),
-        }
-      : {
-          'Content-Type': 'application/json',
-          ...(options.headers || {}),
-        },
+      ? { ...(options.headers || {}) }
+      : { 'Content-Type': 'application/json', ...(options.headers || {}) },
   });
 
   if (!response.ok) {
@@ -61,6 +58,7 @@ export const profileAPI = {
       method: 'POST',
       credentials: 'include',
       body: formData,
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -82,6 +80,7 @@ export const profileAPI = {
       method: 'POST',
       credentials: 'include',
       body: formData,
+      cache: 'no-store',
     });
 
     if (!response.ok) {

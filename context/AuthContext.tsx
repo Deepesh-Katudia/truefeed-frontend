@@ -37,7 +37,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuth = async () => {
     try {
       const data = await authAPI.getProfile();
-      setUser(data.user);
+      console.log('PROFILE RESPONSE:', data);
+      setUser(data.user ?? data);
     } catch (error) {
       setUser(null);
     } finally {
