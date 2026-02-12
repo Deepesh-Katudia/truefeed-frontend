@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Upload, Loader2, Camera } from 'lucide-react';
 import { profileAPI, toAbsoluteUrl } from '@/lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
 
 interface User {
   _id?: string;
@@ -23,6 +24,8 @@ interface EditProfileModalProps {
 }
 
 export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: EditProfileModalProps) {
+  const { refreshUser } = useAuth();
+
   const [formData, setFormData] = useState({
     name: currentUser.name || '',
     description: currentUser.description || '',
@@ -31,8 +34,13 @@ export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: Ed
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  // IMPORTANT: initialize preview with absolute URL
-  const [preview, setPreview] = useState<string>(toAbsoluteUrl(currentUser.picture) || '');
+  // Initialize preview with absolute URL + cache-bust (so browser doesn't show old image)
+  const [preview, setPreview] = useState<string>(() => {
+    const abs = toAbsoluteUrl(currentUser.picture) || '';
+    if (!abs) return '';
+    const sep = abs.includes('?') ? '&' : '?';
+    return `${abs}${sep}t=${Date.now()}`;
+  });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -46,7 +54,15 @@ export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: Ed
       phone: currentUser.phone || '',
     });
     setSelectedImage(null);
-    setPreview(toAbsoluteUrl(currentUser.picture) || '');
+
+    const abs = toAbsoluteUrl(currentUser.picture) || '';
+    if (!abs) {
+      setPreview('');
+    } else {
+      const sep = abs.includes('?') ? '&' : '?';
+      setPreview(`${abs}${sep}t=${Date.now()}`);
+    }
+
     setError('');
     setSuccess('');
   }, [currentUser, isOpen]);
@@ -92,8 +108,12 @@ export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: Ed
           name: formData.name || undefined,
           description: formData.description,
           phone: formData.phone,
-        });
+          phoneNumber: formData.phone, // harmless if backend ignores, remove if your API rejects unknown fields
+        } as any);
       }
+
+      // KEY FIX: refresh global auth user so avatar updates everywhere
+      await refreshUser();
 
       setSuccess('Profile updated successfully!');
       setTimeout(() => onSuccess(), 700);
@@ -163,8 +183,12 @@ export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: Ed
                     <img
                       src={
                         preview ||
-                        toAbsoluteUrl(currentUser.picture) ||
-                        `https://i.pravatar.cc/150?u=${currentUser.email}`
+                        (() => {
+                          const abs = toAbsoluteUrl(currentUser.picture) || '';
+                          if (!abs) return `https://i.pravatar.cc/150?u=${currentUser.email}`;
+                          const sep = abs.includes('?') ? '&' : '?';
+                          return `${abs}${sep}t=${Date.now()}`;
+                        })()
                       }
                       alt="Profile"
                       className="w-24 h-24 rounded-2xl object-cover border border-black/10 shadow-md shadow-black/5"
