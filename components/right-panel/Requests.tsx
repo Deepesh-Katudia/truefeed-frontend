@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { friendsAPI } from '@/lib/api';
+import { friendsAPI, authAPI } from '@/lib/api';
 
 interface IncomingUser {
   _id: string;
@@ -12,17 +12,28 @@ interface IncomingUser {
 
 export function Requests() {
   const [loading, setLoading] = useState(true);
-  const [list, setList] = useState<IncomingUser[]>([]);
+  const [list, setList] = useState<any[]>([]);
   const [error, setError] = useState('');
 
   const load = async () => {
     try {
       setLoading(true);
+
+      // ✅ ensure session is valid before hitting /friends/*
+      await authAPI.getProfile();
+
       const data = await friendsAPI.incoming();
       setList(data.results || []);
       setError('');
     } catch (e: any) {
-      setError(e.message || 'Failed to load requests');
+      // If not logged in yet, don't show a scary error
+      const msg = e?.message || '';
+      if (msg.toLowerCase().includes('unauthorized')) {
+        setList([]);
+        setError('');
+      } else {
+        setError(msg || 'Failed to load requests');
+      }
     } finally {
       setLoading(false);
     }
