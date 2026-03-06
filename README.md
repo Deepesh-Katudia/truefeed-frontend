@@ -10,6 +10,13 @@ This repository contains the **Next.js frontend application** built with modern 
 
 Watch the full working demo of the project here:
 
+<h2>🎥 Project Demo</h2>
+
+<video width="800" controls>
+  <source src="/Truefeed_Project_Video" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 👉 **YouTube Demo:**  
 (https://youtu.be/PMiKg-sIGtQ)
 
