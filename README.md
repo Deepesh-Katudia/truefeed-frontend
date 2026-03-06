@@ -9,7 +9,11 @@ This repository contains the **Next.js frontend application** built with modern 
 ## 🎥 Project Demo
 
 Watch the full working demo of the project here:
-[▶️ Click here to play the demo video](./Truefeed_Project_Video)
+
+👉 **YouTube Demo:**  
+
+https://youtu.be/PMiKg-sIGtQ
+
 
 
 ## 🚀 Features
