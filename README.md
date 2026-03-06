@@ -138,18 +138,5 @@ npm run build
 
 ## 👨‍💻 Author
 
-Deepesh Katudia
+Deepesh Katudia || 
 Software Developer
-
-```
-
----
-
-When you are ready, send me your YouTube link and I can format it as:
-
-- clickable thumbnail preview
-- embedded GIF preview
-- or add badges for GitHub polish
-
-Next we can prepare the backend README.
-```
