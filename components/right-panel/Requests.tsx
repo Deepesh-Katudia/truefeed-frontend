@@ -1,33 +1,34 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { friendsAPI, authAPI } from '@/lib/api';
 
-interface IncomingUser {
+import { useEffect, useState } from 'react';
+
+import { authAPI, friendsAPI } from '@/lib/api';
+
+interface IncomingRequest {
   _id: string;
-  name: string;
+  name?: string;
   email: string;
   picture?: string | null;
-  description?: string;
 }
+
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export function Requests() {
   const [loading, setLoading] = useState(true);
-  const [list, setList] = useState<any[]>([]);
+  const [list, setList] = useState<IncomingRequest[]>([]);
   const [error, setError] = useState('');
 
   const load = async () => {
     try {
       setLoading(true);
-
-      // ✅ ensure session is valid before hitting /friends/*
       await authAPI.getProfile();
 
       const data = await friendsAPI.incoming();
       setList(data.results || []);
       setError('');
-    } catch (e: any) {
-      // If not logged in yet, don't show a scary error
-      const msg = e?.message || '';
+    } catch (e: unknown) {
+      const msg = getErrorMessage(e, '');
       if (msg.toLowerCase().includes('unauthorized')) {
         setList([]);
         setError('');
@@ -47,8 +48,8 @@ export function Requests() {
     try {
       await friendsAPI.accept(senderUserId);
       setList((prev) => prev.filter((u) => u._id !== senderUserId));
-    } catch (e: any) {
-      setError(e.message || 'Failed to accept');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to accept'));
     }
   };
 
@@ -56,22 +57,22 @@ export function Requests() {
     try {
       await friendsAPI.decline(senderUserId);
       setList((prev) => prev.filter((u) => u._id !== senderUserId));
-    } catch (e: any) {
-      setError(e.message || 'Failed to decline');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to decline'));
     }
   };
 
   return (
     <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase">Requests</h3>
-        <span className="w-6 h-6 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-xs font-semibold uppercase text-[#756b62]">Requests</h3>
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#d6ccc2] text-xs font-semibold text-[#4d453e]">
           {list.length}
         </span>
       </div>
-      {error && <div className="text-xs text-red-600 mb-3">{error}</div>}
+      {error && <div className="mb-3 text-xs text-red-600">{error}</div>}
       {loading ? (
-        <div className="text-xs text-gray-500">Loading…</div>
+        <div className="text-xs text-[#756b62]">Loading...</div>
       ) : (
         <div className="space-y-4">
           {list.map((u) => (
@@ -79,21 +80,21 @@ export function Requests() {
               <img
                 src={u.picture || 'https://i.pravatar.cc/100?u=' + u.email}
                 alt={u.name}
-                className="w-12 h-12 rounded-full"
+                className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
               />
               <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 text-sm mb-1">{u.name || u.email}</h4>
-                <p className="text-xs text-gray-500 mb-3">wants to add you to friends</p>
+                <h4 className="mb-1 text-sm font-semibold text-[#302c28]">{u.name || u.email}</h4>
+                <p className="mb-3 text-xs text-[#756b62]">wants to add you to friends</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => accept(u._id)}
-                    className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors"
+                    className="flex-1 rounded-lg bg-[#6f6258] px-3 py-2 text-sm font-semibold text-[#fffaf4] transition-colors hover:bg-[#5f554d]"
                   >
                     Accept
                   </button>
                   <button
                     onClick={() => decline(u._id)}
-                    className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors"
+                    className="flex-1 rounded-lg border border-[#302c28]/10 bg-[#edede9] px-3 py-2 text-sm font-semibold text-[#5f554d] transition-colors hover:bg-[#d6ccc2]/70"
                   >
                     Decline
                   </button>
@@ -101,7 +102,7 @@ export function Requests() {
               </div>
             </div>
           ))}
-          {list.length === 0 && <div className="text-xs text-gray-500">No requests</div>}
+          {list.length === 0 && <div className="text-xs text-[#756b62]">No requests</div>}
         </div>
       )}
     </div>

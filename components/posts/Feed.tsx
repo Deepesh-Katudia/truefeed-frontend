@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { PostCard } from './PostCard';
-import { CreatePostModal } from './CreatePostModal';
-import { postAPI, getFileUrl, toAbsoluteUrl } from '@/lib/api';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Loader2, PenLine, RefreshCw } from 'lucide-react';
+
 import { useAuth } from '@/context/AuthContext';
+import { postAPI, toAbsoluteUrl } from '@/lib/api';
+import { CreatePostModal } from './CreatePostModal';
+import { PostCard } from './PostCard';
 
 interface Post {
   _id: string;
@@ -20,6 +21,9 @@ interface Post {
     score?: number | null;
   } | null;
 }
+
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export function Feed() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -36,12 +40,12 @@ export function Feed() {
       } else {
         setLoading(true);
       }
-      
+
       const data = await postAPI.getMyPosts();
       setPosts(data.posts || []);
       setError('');
-    } catch (err: any) {
-      setError(err.message || 'Failed to load posts');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to load posts'));
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -61,88 +65,81 @@ export function Feed() {
   }, []);
 
   const handlePostCreated = () => {
-    loadPosts(true); // Refresh posts after creating new one
+    loadPosts(true);
   };
 
   return (
     <div className="space-y-6">
-      {/* Post Creation Box */}
-      <div className="bg-white rounded-2xl shadow-sm p-6">
+      <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-6 shadow-[0_14px_42px_rgba(48,44,40,0.08)]">
         <div className="flex items-center gap-3">
           <img
             src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
             alt={user?.name || user?.email || 'User'}
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
           />
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex-1 px-4 py-3 bg-gray-50 rounded-xl text-gray-600 text-left hover:bg-gray-100 transition-colors"
+            className="min-w-0 flex-1 rounded-xl border border-[#302c28]/10 bg-[#edede9] px-4 py-3 text-left text-[#756b62] transition-colors hover:bg-[#d6ccc2]/70"
           >
             {`What's new, ${user?.name || (user?.email ? user.email.split('@')[0] : 'you')}?`}
           </button>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center gap-2"
+            className="flex items-center gap-2 rounded-xl bg-[#6f6258] px-6 py-3 font-semibold text-[#fffaf4] shadow-md shadow-[#6f6258]/20 transition-colors hover:bg-[#5f554d]"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-            </svg>
-            Post It!
+            <PenLine className="h-5 w-5" />
+            Post It
           </button>
         </div>
       </div>
 
-      {/* Refresh Button */}
       {posts.length > 0 && (
         <div className="flex justify-center">
           <button
             onClick={() => loadPosts(true)}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
+            className="flex items-center gap-2 rounded-xl border border-[#302c28]/10 bg-[#fffaf4]/80 px-4 py-2 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#f5ebe0] hover:shadow-md disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 text-blue-500 ${refreshing ? 'animate-spin' : ''}`} />
-            <span className="text-sm font-medium text-gray-700">
+            <RefreshCw className={`h-4 w-4 text-[#6f6258] ${refreshing ? 'animate-spin' : ''}`} />
+            <span className="text-sm font-medium text-[#5f554d]">
               {refreshing ? 'Refreshing...' : 'Refresh'}
             </span>
           </button>
         </div>
       )}
 
-      {/* Loading State */}
       {loading && posts.length === 0 && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#6f6258]" />
         </div>
       )}
 
-      {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      {/* Empty State */}
       {!loading && posts.length === 0 && !error && (
-        <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-          <div className="text-6xl mb-4">📝</div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No posts yet</h3>
-          <p className="text-gray-600 mb-6">Share your first thought with the world!</p>
+        <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-12 text-center shadow-[0_14px_42px_rgba(48,44,40,0.08)]">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#edede9] text-[#6f6258]">
+            <PenLine className="h-8 w-8" />
+          </div>
+          <h3 className="mb-2 text-xl font-semibold text-[#302c28]">No posts yet</h3>
+          <p className="mb-6 text-[#756b62]">Share your first thought with the world.</p>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors"
+            className="rounded-xl bg-[#6f6258] px-6 py-3 font-semibold text-[#fffaf4] transition-colors hover:bg-[#5f554d]"
           >
             Create Your First Post
           </button>
         </div>
       )}
 
-      {/* Posts List */}
       {posts.map((post) => (
         <PostCard key={post._id} post={post} />
       ))}
 
-      {/* Create Post Modal */}
       <CreatePostModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}

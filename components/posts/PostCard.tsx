@@ -1,11 +1,11 @@
 'use client';
 
-import { MoreVertical, Share2, ShieldCheck, AlertTriangle } from 'lucide-react';
-import { getFileUrl, toAbsoluteUrl, postAPI } from '@/lib/api';
-import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
-import { Heart, MessageSquare } from 'lucide-react';
-import { motion } from "framer-motion";
+import { AlertTriangle, Heart, MessageSquare, MoreVertical, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+import { getFileUrl, postAPI, toAbsoluteUrl } from '@/lib/api';
+import { useAuth } from '@/context/AuthContext';
 
 interface Post {
   _id: string;
@@ -14,11 +14,25 @@ interface Post {
   mediaUrl?: string;
   createdAt: string;
   updatedAt: string;
+  likesCount?: number;
+  likedBy?: string[];
+  comments?: PostComment[];
   ai?: {
     tag?: string;
     summary?: string;
     score?: number | null;
   } | null;
+}
+
+interface PostComment {
+  _id: string;
+  userId?: string;
+  text: string;
+  createdAt?: string;
+}
+
+interface CommentResponse {
+  id?: string;
 }
 
 interface PostCardProps {
@@ -27,19 +41,22 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const { user } = useAuth();
-  const [likesCount, setLikesCount] = useState<number>((post as any).likesCount || 0);
-  const [comments, setComments] = useState<any[]>((post as any).comments || []);
+  const [likesCount, setLikesCount] = useState<number>(post.likesCount || 0);
+  const [comments, setComments] = useState<PostComment[]>(post.comments || []);
   const [commentText, setCommentText] = useState('');
-  const liked = ((post as any).likedBy || []).some((u: any) => String(u) === String(user?._id || user?.id));
+  const [liked, setLiked] = useState(() =>
+    (post.likedBy || []).some((u) => String(u) === String(user?._id || user?.id))
+  );
   const [aiPreview] = useState<{ tag: string; score: number | null; summary: string } | null>(
-    (post as any)?.ai
+    post.ai
       ? {
-          tag: (post as any).ai.tag || 'Unverified',
-          score: (post as any).ai.score ?? null,
-          summary: (post as any).ai.summary || '',
+          tag: post.ai.tag || 'Unverified',
+          score: post.ai.score ?? null,
+          summary: post.ai.summary || '',
         }
       : null
   );
+
   const formatTimestamp = (date: string) => {
     const now = new Date();
     const postDate = new Date(date);
@@ -53,59 +70,61 @@ export function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-      {/* Post Header */}
+    <motion.article
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+      className="overflow-hidden rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/85 shadow-[0_14px_42px_rgba(48,44,40,0.08)]"
+    >
       <div className="p-6 pb-4">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
               alt={user?.name || user?.email || 'User'}
-              className="w-12 h-12 rounded-full"
+              className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
             />
             <div>
-              <h3 className="font-semibold text-gray-900">{user?.name || user?.email || 'User'}</h3>
-              <p className="text-sm text-gray-500">{formatTimestamp(post.createdAt)}</p>
+              <h3 className="font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</h3>
+              <p className="text-sm text-[#756b62]">{formatTimestamp(post.createdAt)}</p>
             </div>
           </div>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <MoreVertical className="w-5 h-5 text-gray-400" />
+          <button className="rounded-lg p-2 transition-colors hover:bg-[#edede9]" aria-label="Post options">
+            <MoreVertical className="h-5 w-5 text-[#8a7b70]" />
           </button>
         </div>
 
-        {/* Post Content */}
         {post.content && (
-          <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+          <p className="whitespace-pre-wrap leading-relaxed text-[#4d453e]">{post.content}</p>
         )}
 
-        {/* AI Tag & Credibility */}
         {aiPreview && (
           <div className="mt-4 space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {aiPreview.tag === 'Verified' ? (
-                <ShieldCheck className="w-5 h-5 text-green-600" />
+                <ShieldCheck className="h-5 w-5 text-emerald-700" />
               ) : (
-                <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                <AlertTriangle className="h-5 w-5 text-[#8a6f3e]" />
               )}
               <span
-                className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
                   aiPreview.tag === 'Verified'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
                     : aiPreview.tag === 'False'
-                    ? 'bg-red-100 text-red-700'
-                    : 'bg-yellow-100 text-yellow-700'
+                    ? 'border border-red-200 bg-red-50 text-red-700'
+                    : 'border border-[#302c28]/10 bg-[#d6ccc2]/70 text-[#5f554d]'
                 }`}
               >
                 {aiPreview.tag || 'Unverified'}
               </span>
               {typeof aiPreview.score === 'number' && (
-                <span className="text-xs text-gray-600">
+                <span className="text-xs text-[#756b62]">
                   Credibility {aiPreview.score}/5
                 </span>
               )}
             </div>
             {aiPreview.summary && (
-              <p className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <p className="rounded-lg border border-[#302c28]/10 bg-[#edede9]/75 p-3 text-sm text-[#5f554d]">
                 {aiPreview.summary}
               </p>
             )}
@@ -113,58 +132,62 @@ export function PostCard({ post }: PostCardProps) {
         )}
       </div>
 
-      {/* Post Image */}
       {post.mediaUrl && (
         <div className="w-full">
           <img
             src={post.mediaUrl.startsWith('http') ? post.mediaUrl : getFileUrl(post.mediaUrl.split('/').pop() || '')}
             alt="Post media"
-            className="w-full max-h-[600px] object-cover"
+            className="max-h-[600px] w-full object-cover"
           />
         </div>
       )}
 
-      {/* Post Actions */}
-      <div className="px-6 py-4 border-t border-gray-100">
+      <div className="border-t border-[#302c28]/10 px-6 py-4">
         <div className="flex items-center gap-6">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.94 }}
+            whileHover={{ y: -1 }}
             onClick={async () => {
               try {
                 if (liked) {
                   await postAPI.unlike(post._id);
                   setLikesCount((c) => Math.max(0, c - 1));
-                  (post as any).likedBy = ((post as any).likedBy || []).filter((u: any) => String(u) !== String(user?._id || user?.id));
+                  setLiked(false);
                 } else {
                   await postAPI.like(post._id);
                   setLikesCount((c) => c + 1);
-                  ((post as any).likedBy || ((post as any).likedBy = [])).push(user?._id || user?.id);
+                  setLiked(true);
                 }
               } catch {}
             }}
-            className={`flex items-center gap-2 ${liked ? 'text-red-600' : 'text-gray-600 hover:text-blue-500'} transition-colors`}
+            className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+              liked
+                ? 'bg-red-50 text-red-600'
+                : 'bg-[#edede9] text-[#5f554d] hover:bg-[#d6ccc2]/80'
+            }`}
           >
-            <motion.button whileTap={{ scale: 0.92 }} whileHover={{ scale: 1.03 }}>
-  ❤️ Like
-</motion.button>
+            <Heart className={`h-4 w-4 ${liked ? 'fill-current' : ''}`} />
+            <span>Like</span>
             <span className="text-sm font-medium">{likesCount}</span>
-          </button>
-          <div className="flex-1">
+          </motion.button>
+
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-gray-400" />
+              <MessageSquare className="h-5 w-5 flex-none text-[#8a7b70]" />
               <input
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyDown={async (e) => {
                   if (e.key === 'Enter' && commentText.trim()) {
                     try {
-                      const res = await postAPI.comment(post._id, commentText.trim());
-                      setComments((arr) => [...arr, { _id: res.id, userId: user?._id || user?.id, text: commentText.trim(), createdAt: new Date().toISOString() }]);
+                      const res = (await postAPI.comment(post._id, commentText.trim())) as CommentResponse;
+                      setComments((arr) => [...arr, { _id: res.id || crypto.randomUUID(), userId: user?._id || user?.id, text: commentText.trim(), createdAt: new Date().toISOString() }]);
                       setCommentText('');
                     } catch {}
                   }
                 }}
                 placeholder="Write a comment..."
-                className="flex-1 px-3 py-2 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                className="min-w-0 flex-1 rounded-lg border border-[#302c28]/10 bg-[#edede9] px-3 py-2 text-sm text-[#302c28] placeholder:text-[#756b62] focus:outline-none focus:ring-2 focus:ring-[#d6ccc2]"
               />
             </div>
             {comments.length > 0 && (
@@ -172,7 +195,7 @@ export function PostCard({ post }: PostCardProps) {
                 {comments.slice(-3).map((c) => {
                   const mine = String(c.userId) === String(user?._id || user?.id);
                   return (
-                    <div key={c._id} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2 flex items-center justify-between">
+                    <div key={c._id} className="flex items-center justify-between rounded-lg border border-[#302c28]/10 bg-[#f5ebe0]/80 px-3 py-2 text-sm text-[#4d453e]">
                       <span className="truncate">{c.text}</span>
                       {mine && (
                         <button
@@ -195,6 +218,6 @@ export function PostCard({ post }: PostCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.article>
   );
 }

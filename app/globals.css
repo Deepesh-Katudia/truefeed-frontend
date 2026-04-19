@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  /* velvet black */
-  --background: #0e0f13;
-  --foreground: #e6e6eb;
+  --background: #edede9;
+  --foreground: #302c28;
+  --tf-stone: #edede9;
+  --tf-taupe: #d6ccc2;
+  --tf-linen: #f5ebe0;
+  --tf-paper: #fffaf4;
+  --tf-ink: #302c28;
+  --tf-muted: #756b62;
 }
 
 @theme inline {
@@ -21,7 +26,6 @@ body {
 body {
   background-color: var(--background);
   color: var(--foreground);
-   font-family:
+  font-family:
     "Montserrat", sans-serif;
 }
-

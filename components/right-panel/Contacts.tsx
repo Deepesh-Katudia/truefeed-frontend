@@ -1,5 +1,7 @@
 'use client';
+
 import { useEffect, useState } from 'react';
+
 import { friendsAPI, toAbsoluteUrl } from '@/lib/api';
 
 interface Contact {
@@ -12,6 +14,9 @@ interface Contact {
   incomingPending: boolean;
   outgoingPending: boolean;
 }
+
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export function Contacts() {
   const [q, setQ] = useState('');
@@ -31,8 +36,8 @@ export function Contacts() {
       const data = await friendsAPI.search(val, 8);
       setList(data.results || []);
       setError('');
-    } catch (e: any) {
-      setError(e.message || 'Failed to load contacts');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to load contacts'));
     } finally {
       setLoading(false);
     }
@@ -51,28 +56,28 @@ export function Contacts() {
           c._id === targetUserId ? { ...c, outgoingPending: true } : c
         )
       );
-    } catch (e: any) {
-      setError(e.message || 'Failed to send request');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to send request'));
     }
   };
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase">Contacts</h3>
-        <span className="text-xs text-gray-400">{list.length}</span>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-xs font-semibold uppercase text-[#756b62]">Contacts</h3>
+        <span className="text-xs text-[#8a7b70]">{list.length}</span>
       </div>
       <div className="mb-3">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search contacts"
-          className="w-full px-3 py-2 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          className="w-full rounded-lg border border-[#302c28]/10 bg-[#edede9] px-3 py-2 text-sm text-[#302c28] placeholder:text-[#756b62] focus:outline-none focus:ring-2 focus:ring-[#d6ccc2]"
         />
       </div>
-      {error && <div className="text-xs text-red-600 mb-2">{error}</div>}
+      {error && <div className="mb-2 text-xs text-red-600">{error}</div>}
       {loading ? (
-        <div className="text-xs text-gray-500">Loading…</div>
+        <div className="text-xs text-[#756b62]">Loading...</div>
       ) : (
         <div className="space-y-3">
           {list.map((contact) => {
@@ -83,28 +88,28 @@ export function Contacts() {
               : 'Send Request';
             const disabled = contact.isFriend || contact.outgoingPending || contact.incomingPending;
             return (
-              <div key={contact._id} className="flex items-center justify-between group">
-                <div className="flex items-center gap-3 min-w-0">
+              <div key={contact._id} className="group flex items-center justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <div className="relative">
                     <img
                       src={toAbsoluteUrl(contact.picture || undefined) || 'https://i.pravatar.cc/100?u=' + contact.email}
                       alt={contact.name}
-                      className="w-10 h-10 rounded-full"
+                      className="h-10 w-10 rounded-full border border-[#302c28]/10 object-cover"
                     />
                   </div>
-                  <span className="text-sm font-medium text-gray-900 max-w-[150px] truncate">
+                  <span className="max-w-[150px] truncate text-sm font-medium text-[#302c28]">
                     {contact.name || contact.email}
                   </span>
                 </div>
                 <button
                   onClick={() => !disabled && sendRequest(contact._id)}
                   disabled={disabled}
-                  className={`px-2 py-1 rounded text-xs font-semibold ${
+                  className={`rounded px-2 py-1 text-xs font-semibold ${
                     contact.isFriend
-                      ? 'bg-green-100 text-green-700'
+                      ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
                       : contact.outgoingPending || contact.incomingPending
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                      ? 'border border-[#302c28]/10 bg-[#d6ccc2]/70 text-[#5f554d]'
+                      : 'bg-[#6f6258] text-[#fffaf4] hover:bg-[#5f554d]'
                   }`}
                 >
                   {actionLabel}
@@ -112,7 +117,7 @@ export function Contacts() {
               </div>
             );
           })}
-          {list.length === 0 && <div className="text-xs text-gray-500">No contacts</div>}
+          {list.length === 0 && <div className="text-xs text-[#756b62]">No contacts</div>}
         </div>
       )}
     </div>

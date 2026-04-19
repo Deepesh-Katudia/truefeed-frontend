@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '@/lib/api';
-import { useRouter } from 'next/navigation';
 
 interface User {
   _id?: string;
@@ -39,20 +38,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await authAPI.getProfile();
       console.log('PROFILE RESPONSE:', data);
       setUser(data?.user ?? null);
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
+  const getErrorMessage = (error: unknown, fallback: string) =>
+    error instanceof Error ? error.message : fallback;
+
   const login = async (email: string, password: string) => {
     try {
       await authAPI.login(email, password);
       await checkAuth();
       return { success: true };
-    } catch (error: any) {
-      return { success: false, error: error.message };
+    } catch (error: unknown) {
+      return { success: false, error: getErrorMessage(error, 'Login failed') };
     }
   };
 
@@ -64,8 +66,8 @@ const signup = async (email: string, password: string, name?: string) => {
     await checkAuth();
 
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error?.message || 'Signup failed' };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error, 'Signup failed') };
   }
 };
 

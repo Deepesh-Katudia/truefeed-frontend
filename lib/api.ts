@@ -24,9 +24,10 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 
   const token = getToken();
 
-  const headers: Record<string, string> = {
-    ...(options.headers as any),
-  };
+  const headers: Record<string, string> = {};
+  new Headers(options.headers).forEach((value, key) => {
+    headers[key] = value;
+  });
 
   if (!isFormData) {
     headers["Content-Type"] = "application/json";
@@ -91,6 +92,7 @@ export const profileAPI = {
   updateProfile: (data: {
     description?: string;
     phone?: string;
+    phoneNumber?: string;
     name?: string;
   }) =>
     fetchAPI("/api/v1/profile/update", {

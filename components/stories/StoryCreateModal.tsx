@@ -8,6 +8,9 @@ interface Props {
   onSuccess: (item: { _id: string; text?: string; mediaUrl?: string; mediaType: 'image' | 'video' | 'none'; createdAt: string; expiresAt: string }) => void;
 }
 
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
+
 export function StoryCreateModal({ isOpen, onClose, onSuccess }: Props) {
   const [text, setText] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -15,7 +18,7 @@ export function StoryCreateModal({ isOpen, onClose, onSuccess }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const onFile = (e: any) => {
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
     setFile(f);
@@ -50,8 +53,8 @@ export function StoryCreateModal({ isOpen, onClose, onSuccess }: Props) {
       setFile(null);
       setPreview('');
       onClose();
-    } catch (e: any) {
-      setError(e.message || 'Could not create story');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Could not create story'));
     } finally {
       setLoading(false);
     }
@@ -60,29 +63,29 @@ export function StoryCreateModal({ isOpen, onClose, onSuccess }: Props) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl w-full max-w-md p-6">
-        <div className="text-lg font-semibold mb-4 text-black">Create Story</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#302c28]/45 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-[#302c28]/10 bg-[#fffaf4] p-6 shadow-[0_24px_70px_rgba(48,44,40,0.20)]">
+        <div className="mb-4 text-lg font-semibold text-[#302c28]">Create Story</div>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Say something..."
           maxLength={300}
-          className="w-full h-24 bg-gray-50 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          className="h-24 w-full rounded-lg border border-[#302c28]/10 bg-[#edede9] p-3 text-sm text-[#302c28] placeholder:text-[#756b62] focus:outline-none focus:ring-2 focus:ring-[#d6ccc2]"
         />
         <div className="mt-4">
-          <input type="file" accept="image/*,video/*" onChange={onFile} className="text-gray-900" />
+          <input type="file" accept="image/*,video/*" onChange={onFile} className="text-sm text-[#5f554d]" />
         </div>
         {preview && (
           <div className="mt-4 relative">
             {file && file.type.startsWith('video') ? (
-              <video src={preview} controls className="w-full rounded-lg" />
+              <video src={preview} controls className="w-full rounded-lg border border-[#302c28]/10" />
             ) : (
-              <img src={preview} alt="preview" className="w-full rounded-lg" />
+              <img src={preview} alt="preview" className="w-full rounded-lg border border-[#302c28]/10" />
             )}
             <button
               onClick={removeFile}
-              className="absolute top-2 right-2 px-2 py-1 bg-red-500 text-white rounded"
+              className="absolute right-2 top-2 rounded bg-red-600 px-2 py-1 text-white"
             >
               Remove
             </button>
@@ -90,11 +93,11 @@ export function StoryCreateModal({ isOpen, onClose, onSuccess }: Props) {
         )}
         {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
         <div className="mt-6 flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 rounded bg-gray-100 text-gray-700">Cancel</button>
+          <button onClick={onClose} className="rounded border border-[#302c28]/10 bg-[#edede9] px-4 py-2 text-[#5f554d] transition hover:bg-[#d6ccc2]/70">Cancel</button>
           <button
             onClick={submit}
             disabled={loading || (!text.trim() && !file)}
-            className="px-4 py-2 rounded bg-blue-500 text-white disabled:opacity-50"
+            className="rounded bg-[#6f6258] px-4 py-2 text-[#fffaf4] transition hover:bg-[#5f554d] disabled:opacity-50"
           >
             {loading ? 'Posting...' : 'Post Story'}
           </button>

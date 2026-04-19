@@ -17,6 +17,9 @@ interface Person {
   outgoingPending: boolean;
 }
 
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
+
 export default function PeoplePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -44,8 +47,8 @@ export default function PeoplePage() {
       const data = await friendsAPI.search(effectiveQ, 20);
       setList(data.results || []);
       setError('');
-    } catch (e: any) {
-      setError(e.message || 'Failed to load people');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to load people'));
     } finally {
       setFetching(false);
     }
@@ -59,8 +62,8 @@ export default function PeoplePage() {
           p._id === targetUserId ? { ...p, outgoingPending: true } : p
         )
       );
-    } catch (e: any) {
-      setError(e.message || 'Failed to send request');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to send request'));
     }
   };
 

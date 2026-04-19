@@ -6,12 +6,21 @@ import { useAuth } from '@/context/AuthContext';
 import { usersAPI } from '@/lib/api';
 import { Sidebar } from '@/components/layout/Sidebar';
 
+interface TargetUser {
+  _id?: string;
+  id?: string;
+  email?: string;
+  name?: string;
+  picture?: string;
+  description?: string;
+}
+
 export default function UserProfilePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const params = useParams();
   const userId = String(params?.id || '');
-  const [target, setTarget] = useState<any>(null);
+  const [target, setTarget] = useState<TargetUser | null>(null);
   const [relation, setRelation] = useState<{ isFriend: boolean; incomingPending: boolean; outgoingPending: boolean } | null>(null);
 
   useEffect(() => {

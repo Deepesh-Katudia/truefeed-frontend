@@ -11,6 +11,9 @@ interface CreatePostModalProps {
   onPostCreated: () => void;
 }
 
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
+
 export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostModalProps) {
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -94,25 +97,25 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
       // Notify parent
       onPostCreated();
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Failed to create post');
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, 'Failed to create post'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#302c28]/45 p-4 backdrop-blur-sm">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#302c28]/10 bg-[#fffaf4] shadow-[0_24px_70px_rgba(48,44,40,0.20)]">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Create Post</h2>
+        <div className="flex items-center justify-between border-b border-[#302c28]/10 p-6">
+          <h2 className="text-xl font-bold text-[#302c28]">Create Post</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="rounded-full p-2 transition-colors hover:bg-[#edede9]"
             disabled={loading}
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="h-5 w-5 text-[#756b62]" />
           </button>
         </div>
 
@@ -123,11 +126,11 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
             <img
               src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
               alt={user?.name || user?.email || 'User'}
-              className="w-12 h-12 rounded-full"
+              className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
             />
             <div>
-              <div className="font-semibold text-gray-900">{user?.name || user?.email || 'User'}</div>
-              <div className="text-sm text-gray-500">@{user?.email?.split('@')[0] || 'user'}</div>
+              <div className="font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</div>
+              <div className="text-sm text-[#756b62]">@{user?.email?.split('@')[0] || 'user'}</div>
             </div>
           </div>
 
@@ -136,7 +139,7 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
             placeholder={`What's on your mind, ${user?.name || (user?.email ? user.email.split('@')[0] : 'you')}?`}
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="w-full min-h-[150px] p-4 bg-gray-50 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="min-h-[150px] w-full resize-none rounded-xl border border-[#302c28]/10 bg-[#edede9] p-4 text-[#302c28] placeholder:text-[#756b62] focus:outline-none focus:ring-2 focus:ring-[#d6ccc2]"
             disabled={loading}
             maxLength={2000}
           />
@@ -147,14 +150,14 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
               <img
                 src={preview}
                 alt="Preview"
-                className="w-full h-64 object-cover rounded-lg"
+                className="h-64 w-full rounded-lg border border-[#302c28]/10 object-cover"
               />
               <button
                 onClick={removeImage}
-                className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+                className="absolute right-2 top-2 rounded-full bg-red-600 p-2 text-white transition-colors hover:bg-red-700"
                 disabled={loading}
               >
-                <X className="w-4 h-4" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           )}
@@ -165,21 +168,21 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
               <div className="flex items-center gap-2">
                 <span
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                    aiPreview.tag === 'Verified'
-                      ? 'bg-green-100 text-green-700'
+                  aiPreview.tag === 'Verified'
+                      ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
                       : aiPreview.tag === 'False'
-                      ? 'bg-red-100 text-red-700'
-                      : 'bg-yellow-100 text-yellow-700'
+                      ? 'border border-red-200 bg-red-50 text-red-700'
+                      : 'border border-[#302c28]/10 bg-[#d6ccc2]/70 text-[#5f554d]'
                   }`}
                 >
                   {aiPreview.tag}
                 </span>
                 {typeof aiPreview.score === 'number' && (
-                  <span className="text-xs text-gray-600">Credibility {aiPreview.score}/5</span>
+                  <span className="text-xs text-[#756b62]">Credibility {aiPreview.score}/5</span>
                 )}
               </div>
               {aiPreview.summary && (
-                <p className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                <p className="rounded-lg border border-[#302c28]/10 bg-[#edede9]/75 p-3 text-sm text-[#5f554d]">
                   {aiPreview.summary}
                 </p>
               )}
@@ -195,9 +198,9 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
 
           {/* Actions */}
           <div className="flex items-center justify-between mt-6">
-            <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg cursor-pointer transition-colors">
-              <ImageIcon className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Add Photo</span>
+            <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-[#302c28]/10 bg-[#edede9] px-4 py-2 transition-colors hover:bg-[#d6ccc2]/70">
+              <ImageIcon className="h-5 w-5 text-[#5f554d]" />
+              <span className="text-sm font-medium text-[#5f554d]">Add Photo</span>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp,image/gif"
@@ -210,9 +213,9 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
             <button
               onClick={handleSubmit}
               disabled={loading || (!content.trim() && !selectedImage)}
-              className="px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="flex items-center gap-2 rounded-xl bg-[#6f6258] px-6 py-3 font-semibold text-[#fffaf4] transition-colors hover:bg-[#5f554d] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {(loading || checking) && <Loader2 className="w-5 h-5 animate-spin" />}
+              {(loading || checking) && <Loader2 className="h-5 w-5 animate-spin" />}
               {loading ? 'Posting...' : checking ? 'Checking...' : 'Post'}
             </button>
           </div>

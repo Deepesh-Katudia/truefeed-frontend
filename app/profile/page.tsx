@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { ProfileContent } from '@/components/profile/ProfileContent';
 
 export default function ProfilePage() {
@@ -18,8 +18,8 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      <div className="flex min-h-screen items-center justify-center bg-[#edede9]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#6f6258]" />
       </div>
     );
   }

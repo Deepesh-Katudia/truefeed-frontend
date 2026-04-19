@@ -1,10 +1,12 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+import { useAuth } from '@/context/AuthContext';
 import { storiesAPI, toAbsoluteUrl } from '@/lib/api';
 import { StoryCreateModal } from './StoryCreateModal';
 import { StoryViewer } from './StoryViewer';
-import { useAuth } from '@/context/AuthContext';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface StoryItem {
   _id: string;
@@ -14,11 +16,15 @@ interface StoryItem {
   createdAt: string;
   expiresAt: string;
 }
+
 interface StoryUserGroup {
   user: { _id: string; name?: string; email?: string; picture?: string | null };
   latestCreatedAt: string;
   items: StoryItem[];
 }
+
+const getErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export function StoryBar() {
   const [groups, setGroups] = useState<StoryUserGroup[]>([]);
@@ -36,8 +42,8 @@ export function StoryBar() {
       const data = await storiesAPI.feed();
       setGroups(data.users || []);
       setError('');
-    } catch (e: any) {
-      setError(e.message || 'Failed to load stories');
+    } catch (e: unknown) {
+      setError(getErrorMessage(e, 'Failed to load stories'));
     } finally {
       setLoading(false);
     }
@@ -47,104 +53,115 @@ export function StoryBar() {
     load();
   }, []);
 
+  const renderStoryCard = (g: StoryUserGroup, bgSrc: string, onClick: () => void, key: string) => (
+    <div key={key} className="w-32 flex-shrink-0" onClick={onClick}>
+      <div className="relative h-48 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(48,44,40,0.14)]">
+        <img src={bgSrc} alt={g.user.name || g.user.email || 'Story'} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#302c28]/55 via-transparent to-transparent" />
+        <div className="absolute left-3 top-3">
+          <img
+            src={toAbsoluteUrl(g.user.picture || undefined) || 'https://i.pravatar.cc/100?u=' + (g.user.email || g.user._id)}
+            alt={g.user.name || g.user.email || 'User'}
+            className="h-10 w-10 rounded-full border-2 border-[#fffaf4] object-cover"
+          />
+        </div>
+        <div className="absolute bottom-3 left-3 right-3">
+          <p className="truncate text-sm font-semibold text-white">{g.user.name || g.user.email}</p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="mb-6">
       <div className="relative">
         <div className="flex gap-4 overflow-x-hidden pb-2" ref={stripRef}>
-          <div className="flex-shrink-0 w-32" onClick={() => setShowCreate(true)}>
-            <div className="relative h-48 bg-gray-100 rounded-2xl overflow-hidden cursor-pointer hover:shadow-lg transition-shadow group">
+          <div className="w-32 flex-shrink-0" onClick={() => setShowCreate(true)}>
+            <div className="group relative h-48 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 bg-[#edede9] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:bg-[#f5ebe0] hover:shadow-[0_18px_42px_rgba(48,44,40,0.12)]">
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#302c28]/10 bg-[#fffaf4] shadow-lg shadow-[#302c28]/5 transition-transform group-hover:scale-110">
+                  <svg className="h-6 w-6 text-[#5f554d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+                <span className="text-sm font-semibold text-[#4d453e]">Add Story</span>
               </div>
-              <span className="text-sm font-semibold text-gray-700">Add Story</span>
             </div>
           </div>
-        </div>
-        {groups.flatMap((g) => {
-          const uid = String(user?._id || user?.id);
-          if (String(g.user._id) === uid) {
-            return g.items.map((it, index) => {
-              const bgSrc =
-                (it.mediaType === 'image' && toAbsoluteUrl(it.mediaUrl)) ||
-                g.user.picture ||
-                'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
-              return (
-                <div
-                  key={`self-${String(it._id)}`}
-                  className="flex-shrink-0 w-32"
-                  onClick={() => {
+
+          {loading && (
+            <div className="flex h-48 w-32 flex-shrink-0 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#edede9] text-sm text-[#756b62]">
+              Loading...
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="flex h-48 w-48 flex-shrink-0 items-center justify-center rounded-2xl border border-red-200 bg-red-50 px-4 text-center text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {!loading && !error && groups.flatMap((g) => {
+            const uid = String(user?._id || user?.id);
+            if (String(g.user._id) === uid) {
+              return g.items.map((it, index) => {
+                const bgSrc =
+                  (it.mediaType === 'image' && toAbsoluteUrl(it.mediaUrl)) ||
+                  g.user.picture ||
+                  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
+
+                return renderStoryCard(
+                  g,
+                  bgSrc,
+                  () => {
                     setViewerGroup(g);
                     setViewerStartIdx(index);
-                  }}
-                >
-                  <div className="relative h-48 rounded-2xl overflow-hidden cursor-pointer hover:shadow-lg transition-shadow">
-                    <img src={bgSrc} alt={g.user.name || g.user.email || 'Story'} className="w-full h-full object-cover" />
-                    <div className="absolute top-3 left-3">
-                      <img
-                        src={toAbsoluteUrl(g.user.picture || undefined) || 'https://i.pravatar.cc/100?u=' + (g.user.email || g.user._id)}
-                        alt={g.user.name || g.user.email || 'User'}
-                        className="w-10 h-10 rounded-full border-2 border-white"
-                      />
-                    </div>
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <p className="text-white text-sm font-semibold truncate">{g.user.name || g.user.email}</p>
-                    </div>
-                  </div>
-                </div>
-              );
-            });
-          }
-          const firstWithMedia = g.items.find((it) => it.mediaType === 'image') || g.items[0];
-          const bgSrc =
-            (firstWithMedia && firstWithMedia.mediaType === 'image' && toAbsoluteUrl(firstWithMedia.mediaUrl)) ||
-            g.user.picture ||
-            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
-          return [
-            <div
-              key={String(g.user._id)}
-              className="flex-shrink-0 w-32"
-              onClick={() => {
-                setViewerGroup(g);
-                setViewerStartIdx(0);
-              }}
-            >
-              <div className="relative h-48 rounded-2xl overflow-hidden cursor-pointer hover:shadow-lg transition-shadow">
-                <img src={bgSrc} alt={g.user.name || g.user.email || 'Story'} className="w-full h-full object-cover" />
-                <div className="absolute top-3 left-3">
-                  <img
-                    src={toAbsoluteUrl(g.user.picture || undefined) || 'https://i.pravatar.cc/100?u=' + (g.user.email || g.user._id)}
-                    alt={g.user.name || g.user.email || 'User'}
-                    className="w-10 h-10 rounded-full border-2 border-white"
-                  />
-                </div>
-                <div className="absolute bottom-3 left-3 right-3">
-                  <p className="text-white text-sm font-semibold truncate">{g.user.name || g.user.email}</p>
-                </div>
-              </div>
-            </div>,
-          ];
-        })}
+                  },
+                  `self-${String(it._id)}`
+                );
+              });
+            }
+
+            const firstWithMedia = g.items.find((it) => it.mediaType === 'image') || g.items[0];
+            const bgSrc =
+              (firstWithMedia && firstWithMedia.mediaType === 'image' && toAbsoluteUrl(firstWithMedia.mediaUrl)) ||
+              g.user.picture ||
+              'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
+
+            return [
+              renderStoryCard(
+                g,
+                bgSrc,
+                () => {
+                  setViewerGroup(g);
+                  setViewerStartIdx(0);
+                },
+                String(g.user._id)
+              ),
+            ];
+          })}
         </div>
-        <div className="absolute top-1/2 -translate-y-1/2 -left-6 z-10">
+
+        <div className="absolute -left-6 top-1/2 z-10 -translate-y-1/2">
           <button
             onClick={() => stripRef.current?.scrollBy({ left: -180, behavior: 'smooth' })}
-            className="p-2 rounded-full bg-white shadow hover:bg-gray-100"
+            className="rounded-full border border-[#302c28]/10 bg-[#fffaf4]/95 p-2 shadow-md shadow-[#302c28]/10 transition hover:bg-[#f5ebe0]"
+            aria-label="Scroll stories left"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="h-5 w-5 text-[#5f554d]" />
           </button>
         </div>
-        <div className="absolute top-1/2 -translate-y-1/2 -right-6 z-10">
+        <div className="absolute -right-6 top-1/2 z-10 -translate-y-1/2">
           <button
             onClick={() => stripRef.current?.scrollBy({ left: 180, behavior: 'smooth' })}
-            className="p-2 rounded-full bg-white shadow hover:bg-gray-100"
+            className="rounded-full border border-[#302c28]/10 bg-[#fffaf4]/95 p-2 shadow-md shadow-[#302c28]/10 transition hover:bg-[#f5ebe0]"
+            aria-label="Scroll stories right"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="h-5 w-5 text-[#5f554d]" />
           </button>
         </div>
       </div>
+
       <StoryCreateModal
         isOpen={showCreate}
         onClose={() => setShowCreate(false)}
@@ -169,12 +186,11 @@ export function StoryBar() {
               };
               nextGroups = [newGroup, ...prev];
             }
-            // Open viewer on the updated group immediately
             const g = nextGroups.find((x) => String(x.user._id) === uid) || null;
             setViewerGroup(g);
             return nextGroups;
           });
-          // Also refresh from server and merge to ensure older items remain
+
           storiesAPI.feed().then((data) => {
             setGroups((prev) => {
               const incoming = (data.users || []) as StoryUserGroup[];
@@ -189,12 +205,16 @@ export function StoryBar() {
                   for (const it of g.items) {
                     if (!seen.has(String(it._id))) mergedItems.push(it);
                   }
-                  map.set(key, { ...existing, latestCreatedAt: g.latestCreatedAt, items: mergedItems.sort((a,b)=> (new Date(b.createdAt).getTime()-new Date(a.createdAt).getTime())) });
+                  map.set(key, {
+                    ...existing,
+                    latestCreatedAt: g.latestCreatedAt,
+                    items: mergedItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+                  });
                 } else {
                   map.set(key, g);
                 }
               }
-              return Array.from(map.values()).sort((a,b)=> (new Date(b.latestCreatedAt).getTime()-new Date(a.latestCreatedAt).getTime()));
+              return Array.from(map.values()).sort((a, b) => new Date(b.latestCreatedAt).getTime() - new Date(a.latestCreatedAt).getTime());
             });
           }).catch(() => {});
         }}
