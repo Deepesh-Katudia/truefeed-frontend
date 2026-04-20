@@ -1,4 +1,9 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const DEFAULT_API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://truefeed-backend.vercel.app"
+    : "http://localhost:4000";
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL).replace(/\/$/, "");
 
 const TOKEN_KEY = "truefeed_token";
 
