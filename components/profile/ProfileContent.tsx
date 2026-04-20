@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { useAuth } from '@/context/AuthContext';
 import { Sidebar } from '../layout/Sidebar';
+import { MobileNav } from '../layout/MobileNav';
 import { postAPI, toAbsoluteUrl } from '@/lib/api';
 import { EditProfileModal } from './EditProfileModal';
 
@@ -74,13 +75,13 @@ export function ProfileContent({ user }: ProfileContentProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_54%,#d6ccc2_100%)] text-[#302c28]">
+    <div className="min-h-screen bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_54%,#d6ccc2_100%)] pb-24 text-[#302c28] lg:pb-0">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <div className="lg:sticky lg:top-0 lg:h-screen">
+        <div className="hidden lg:sticky lg:top-0 lg:block lg:h-screen">
           <Sidebar />
         </div>
 
-        <div className="flex-1 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+        <div className="min-w-0 flex-1 px-3 py-4 sm:px-6 sm:py-5 lg:px-8 lg:py-8">
           <div className="mx-auto w-full max-w-6xl">
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               <div className="space-y-6 lg:col-span-8">
@@ -145,7 +146,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
 
                         <button
                           onClick={() => setShowEditModal(true)}
-                          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#6f6258] px-4 py-2 text-sm font-semibold text-[#fffaf4] shadow-md shadow-[#6f6258]/20 transition hover:bg-[#5f554d] focus:outline-none focus:ring-4 focus:ring-[#d6ccc2]/50"
+                          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#6f6258] px-4 py-2 text-sm font-semibold text-[#fffaf4] shadow-md shadow-[#6f6258]/20 transition hover:bg-[#5f554d] focus:outline-none focus:ring-4 focus:ring-[#d6ccc2]/50 sm:w-auto"
                         >
                           <Edit2 className="h-4 w-4" />
                           Edit Profile
@@ -349,6 +350,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
           currentUser={me}
         />
       </div>
+      <MobileNav />
     </div>
   );
 }

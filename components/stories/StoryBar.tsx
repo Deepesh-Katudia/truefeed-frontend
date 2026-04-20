@@ -54,15 +54,15 @@ export function StoryBar() {
   }, []);
 
   const renderStoryCard = (g: StoryUserGroup, bgSrc: string, onClick: () => void, key: string) => (
-    <div key={key} className="w-32 flex-shrink-0" onClick={onClick}>
-      <div className="relative h-48 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(48,44,40,0.14)]">
+    <div key={key} className="w-24 flex-shrink-0 sm:w-32" onClick={onClick}>
+      <div className="relative h-36 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(48,44,40,0.14)] sm:h-48">
         <img src={bgSrc} alt={g.user.name || g.user.email || 'Story'} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#302c28]/55 via-transparent to-transparent" />
         <div className="absolute left-3 top-3">
           <img
             src={toAbsoluteUrl(g.user.picture || undefined) || 'https://i.pravatar.cc/100?u=' + (g.user.email || g.user._id)}
             alt={g.user.name || g.user.email || 'User'}
-            className="h-10 w-10 rounded-full border-2 border-[#fffaf4] object-cover"
+            className="h-8 w-8 rounded-full border-2 border-[#fffaf4] object-cover sm:h-10 sm:w-10"
           />
         </div>
         <div className="absolute bottom-3 left-3 right-3">
@@ -73,30 +73,30 @@ export function StoryBar() {
   );
 
   return (
-    <div className="mb-6">
+    <div className="mb-4 sm:mb-6">
       <div className="relative">
-        <div className="flex gap-4 overflow-x-hidden pb-2" ref={stripRef}>
-          <div className="w-32 flex-shrink-0" onClick={() => setShowCreate(true)}>
-            <div className="group relative h-48 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 bg-[#edede9] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:bg-[#f5ebe0] hover:shadow-[0_18px_42px_rgba(48,44,40,0.12)]">
+        <div className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-4 lg:overflow-x-hidden [&::-webkit-scrollbar]:hidden" ref={stripRef}>
+          <div className="w-24 flex-shrink-0 sm:w-32" onClick={() => setShowCreate(true)}>
+            <div className="group relative h-36 cursor-pointer overflow-hidden rounded-2xl border border-[#302c28]/10 bg-[#edede9] shadow-sm transition-all duration-200 hover:-translate-y-1 hover:bg-[#f5ebe0] hover:shadow-[0_18px_42px_rgba(48,44,40,0.12)] sm:h-48">
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#302c28]/10 bg-[#fffaf4] shadow-lg shadow-[#302c28]/5 transition-transform group-hover:scale-110">
                   <svg className="h-6 w-6 text-[#5f554d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 </div>
-                <span className="text-sm font-semibold text-[#4d453e]">Add Story</span>
+                <span className="text-center text-xs font-semibold text-[#4d453e] sm:text-sm">Add Story</span>
               </div>
             </div>
           </div>
 
           {loading && (
-            <div className="flex h-48 w-32 flex-shrink-0 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#edede9] text-sm text-[#756b62]">
+            <div className="flex h-36 w-24 flex-shrink-0 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#edede9] text-center text-xs text-[#756b62] sm:h-48 sm:w-32 sm:text-sm">
               Loading...
             </div>
           )}
 
           {!loading && error && (
-            <div className="flex h-48 w-48 flex-shrink-0 items-center justify-center rounded-2xl border border-red-200 bg-red-50 px-4 text-center text-sm text-red-700">
+            <div className="flex h-36 w-40 flex-shrink-0 items-center justify-center rounded-2xl border border-red-200 bg-red-50 px-4 text-center text-xs text-red-700 sm:h-48 sm:w-48 sm:text-sm">
               {error}
             </div>
           )}
@@ -142,7 +142,7 @@ export function StoryBar() {
           })}
         </div>
 
-        <div className="absolute -left-6 top-1/2 z-10 -translate-y-1/2">
+        <div className="absolute -left-6 top-1/2 z-10 hidden -translate-y-1/2 sm:block">
           <button
             onClick={() => stripRef.current?.scrollBy({ left: -180, behavior: 'smooth' })}
             className="rounded-full border border-[#302c28]/10 bg-[#fffaf4]/95 p-2 shadow-md shadow-[#302c28]/10 transition hover:bg-[#f5ebe0]"
@@ -151,7 +151,7 @@ export function StoryBar() {
             <ChevronLeft className="h-5 w-5 text-[#5f554d]" />
           </button>
         </div>
-        <div className="absolute -right-6 top-1/2 z-10 -translate-y-1/2">
+        <div className="absolute -right-6 top-1/2 z-10 hidden -translate-y-1/2 sm:block">
           <button
             onClick={() => stripRef.current?.scrollBy({ left: 180, behavior: 'smooth' })}
             className="rounded-full border border-[#302c28]/10 bg-[#fffaf4]/95 p-2 shadow-md shadow-[#302c28]/10 transition hover:bg-[#f5ebe0]"

@@ -6,6 +6,7 @@ import { StoryBar } from "../stories/StoryBar";
 import { Feed } from "../posts/Feed";
 import { Requests } from "../right-panel/Requests";
 import { Contacts } from "../right-panel/Contacts";
+import { MobileNav } from "./MobileNav";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -22,7 +23,7 @@ export function DashboardLayout() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen text-[#302c28]">
+    <div className="min-h-screen pb-24 text-[#302c28] lg:pb-0">
       {/* Warm editorial background */}
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_54%,#d6ccc2_100%)]" />
       <div
@@ -34,7 +35,7 @@ export function DashboardLayout() {
         }}
       />
 
-      <div className="mx-auto flex max-w-[1920px] gap-6 px-4 lg:px-0">
+      <div className="mx-auto flex max-w-[1920px] gap-6 px-3 sm:px-4 lg:px-0">
         {/* Left Sidebar */}
         <motion.div
           initial={{ opacity: 0, x: -16 }}
@@ -51,7 +52,7 @@ export function DashboardLayout() {
             variants={stagger}
             initial="hidden"
             animate="visible"
-            className="w-full max-w-3xl py-6"
+            className="w-full max-w-3xl py-4 sm:py-6"
           >
             {/* Top glass card */}
             <motion.div
@@ -59,7 +60,7 @@ export function DashboardLayout() {
               className="mb-6 rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/75 shadow-[0_18px_55px_rgba(48,44,40,0.10)] backdrop-blur-xl"
             >
               <div className="p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-[#756b62]">Welcome back</p>
                     <h2 className="text-lg font-semibold text-[#302c28]">
@@ -67,7 +68,7 @@ export function DashboardLayout() {
                     </h2>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <motion.button
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.96 }}
@@ -170,6 +171,7 @@ export function DashboardLayout() {
           </div>
         </motion.aside>
       </div>
+      <MobileNav />
     </div>
   );
 }

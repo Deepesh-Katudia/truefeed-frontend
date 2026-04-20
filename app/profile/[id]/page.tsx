@@ -19,6 +19,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { friendsAPI, toAbsoluteUrl, usersAPI } from '@/lib/api';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { MobileNav } from '@/components/layout/MobileNav';
 
 interface TargetUser {
   _id?: string;
@@ -193,7 +194,7 @@ export default function UserProfilePage() {
   const RelationIcon = relationState.icon;
 
   return (
-    <div className="min-h-screen text-[#302c28]">
+    <div className="min-h-screen pb-24 text-[#302c28] lg:pb-0">
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_54%,#d6ccc2_100%)]" />
       <div
         className="fixed inset-0 -z-10 opacity-[0.055]"
@@ -204,7 +205,7 @@ export default function UserProfilePage() {
         }}
       />
 
-      <div className="mx-auto flex max-w-[1920px] gap-6 px-4 lg:px-0">
+      <div className="mx-auto flex max-w-[1920px] gap-6 px-3 sm:px-4 lg:px-0">
         <motion.div
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
@@ -214,7 +215,7 @@ export default function UserProfilePage() {
           <Sidebar />
         </motion.div>
 
-        <main className="min-w-0 flex-1 px-0 py-5 sm:px-2 lg:px-0 lg:py-8">
+        <main className="min-w-0 flex-1 px-0 py-4 sm:px-2 sm:py-5 lg:px-0 lg:py-8">
           <div className="mx-auto w-full max-w-6xl space-y-6">
             <Link
               href="/people"
@@ -279,7 +280,7 @@ export default function UserProfilePage() {
                       <button
                         onClick={() => void sendRequest()}
                         disabled={relationState.disabled || requesting}
-                        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-semibold shadow-sm transition disabled:cursor-not-allowed disabled:opacity-80 ${relationState.className}`}
+                        className={`inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border px-5 py-3 text-sm font-semibold shadow-sm transition disabled:cursor-not-allowed disabled:opacity-80 sm:w-auto ${relationState.className}`}
                       >
                         {requesting ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -297,14 +298,14 @@ export default function UserProfilePage() {
 
                       <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
                         <div className="rounded-2xl border border-[#302c28]/10 bg-[#edede9]/80 p-3">
-                          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#756b62]">
+                          <div className="flex items-center gap-2 text-xs font-semibold uppercase text-[#756b62]">
                             <FileText className="h-4 w-4" />
                             Posts
                           </div>
                           <div className="mt-1 text-xl font-bold text-[#302c28]">{posts.length}</div>
                         </div>
                         <div className="rounded-2xl border border-[#302c28]/10 bg-[#edede9]/80 p-3">
-                          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#756b62]">
+                          <div className="flex items-center gap-2 text-xs font-semibold uppercase text-[#756b62]">
                             <Mail className="h-4 w-4" />
                             Email
                           </div>
@@ -313,7 +314,7 @@ export default function UserProfilePage() {
                           </div>
                         </div>
                         <div className="rounded-2xl border border-[#302c28]/10 bg-[#edede9]/80 p-3">
-                          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#756b62]">
+                          <div className="flex items-center gap-2 text-xs font-semibold uppercase text-[#756b62]">
                             <CalendarDays className="h-4 w-4" />
                             Member
                           </div>
@@ -393,6 +394,7 @@ export default function UserProfilePage() {
           </div>
         </main>
       </div>
+      <MobileNav />
     </div>
   );
 }

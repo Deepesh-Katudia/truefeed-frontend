@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import { Montserrat  } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-
-const inter = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
 
 export const metadata: Metadata = {
   title: "TrueFeed - AI-Powered Social Media",
@@ -22,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AuthProvider>
           {children}
         </AuthProvider>

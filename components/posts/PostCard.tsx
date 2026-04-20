@@ -76,16 +76,16 @@ export function PostCard({ post }: PostCardProps) {
       transition={{ type: 'spring', stiffness: 260, damping: 24 }}
       className="overflow-hidden rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/85 shadow-[0_14px_42px_rgba(48,44,40,0.08)]"
     >
-      <div className="p-6 pb-4">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      <div className="p-4 pb-4 sm:p-6">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <img
               src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
               alt={user?.name || user?.email || 'User'}
-              className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
+              className="h-10 w-10 rounded-full border border-[#302c28]/10 object-cover sm:h-12 sm:w-12"
             />
-            <div>
-              <h3 className="font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</h3>
+            <div className="min-w-0">
+              <h3 className="truncate font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</h3>
               <p className="text-sm text-[#756b62]">{formatTimestamp(post.createdAt)}</p>
             </div>
           </div>
@@ -142,8 +142,8 @@ export function PostCard({ post }: PostCardProps) {
         </div>
       )}
 
-      <div className="border-t border-[#302c28]/10 px-6 py-4">
-        <div className="flex items-center gap-6">
+      <div className="border-t border-[#302c28]/10 px-4 py-4 sm:px-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
           <motion.button
             whileTap={{ scale: 0.94 }}
             whileHover={{ y: -1 }}
@@ -160,7 +160,7 @@ export function PostCard({ post }: PostCardProps) {
                 }
               } catch {}
             }}
-            className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+            className={`flex w-full items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition-colors sm:w-auto ${
               liked
                 ? 'bg-red-50 text-red-600'
                 : 'bg-[#edede9] text-[#5f554d] hover:bg-[#d6ccc2]/80'

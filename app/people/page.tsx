@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { friendsAPI, toAbsoluteUrl } from '@/lib/api';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { MobileNav } from '@/components/layout/MobileNav';
 
 interface Person {
   _id: string;
@@ -154,7 +155,7 @@ export default function PeoplePage() {
   }
 
   return (
-    <div className="min-h-screen text-[#302c28]">
+    <div className="min-h-screen pb-24 text-[#302c28] lg:pb-0">
       <div className="fixed inset-0 -z-10 bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_54%,#d6ccc2_100%)]" />
       <div
         className="fixed inset-0 -z-10 opacity-[0.055]"
@@ -165,7 +166,7 @@ export default function PeoplePage() {
         }}
       />
 
-      <div className="mx-auto flex max-w-[1920px] gap-6 px-4 lg:px-0">
+      <div className="mx-auto flex max-w-[1920px] gap-6 px-3 sm:px-4 lg:px-0">
         <motion.div
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
@@ -175,7 +176,7 @@ export default function PeoplePage() {
           <Sidebar />
         </motion.div>
 
-        <main className="min-w-0 flex-1 px-0 py-5 sm:px-2 lg:px-0 lg:py-8">
+        <main className="min-w-0 flex-1 px-0 py-4 sm:px-2 sm:py-5 lg:px-0 lg:py-8">
           <div className="mx-auto w-full max-w-6xl space-y-6">
             <motion.section
               variants={fadeUp}
@@ -187,7 +188,7 @@ export default function PeoplePage() {
               <div className="h-1 w-full bg-[#d6ccc2]" />
               <div className="p-5 sm:p-6">
                 <div>
-                  <div className="mb-3 inline-flex items-center gap-2 rounded-2xl border border-[#302c28]/10 bg-[#f5ebe0]/80 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#756b62]">
+                  <div className="mb-3 inline-flex items-center gap-2 rounded-2xl border border-[#302c28]/10 bg-[#f5ebe0]/80 px-3 py-2 text-xs font-semibold uppercase text-[#756b62]">
                     <Users className="h-4 w-4" />
                     People Directory
                   </div>
@@ -249,7 +250,7 @@ export default function PeoplePage() {
               </motion.div>
             )}
 
-            <section className="grid grid-cols-[repeat(auto-fit,minmax(270px,1fr))] gap-4">
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,270px),1fr))] gap-4">
               {list.map((person, index) => {
                 const relation = getRelation(person);
                 const RelationIcon = relation.icon;
@@ -333,6 +334,7 @@ export default function PeoplePage() {
           </div>
         </main>
       </div>
+      <MobileNav />
     </div>
   );
 }

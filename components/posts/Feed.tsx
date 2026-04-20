@@ -69,23 +69,23 @@ export function Feed() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-6 shadow-[0_14px_42px_rgba(48,44,40,0.08)]">
-        <div className="flex items-center gap-3">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-4 shadow-[0_14px_42px_rgba(48,44,40,0.08)] sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <img
             src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
             alt={user?.name || user?.email || 'User'}
-            className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
+            className="h-11 w-11 rounded-full border border-[#302c28]/10 object-cover sm:h-12 sm:w-12"
           />
           <button
             onClick={() => setShowCreateModal(true)}
-            className="min-w-0 flex-1 rounded-xl border border-[#302c28]/10 bg-[#edede9] px-4 py-3 text-left text-[#756b62] transition-colors hover:bg-[#d6ccc2]/70"
+            className="min-w-0 flex-1 rounded-xl border border-[#302c28]/10 bg-[#edede9] px-4 py-3 text-left text-sm text-[#756b62] transition-colors hover:bg-[#d6ccc2]/70 sm:text-base"
           >
             {`What's new, ${user?.name || (user?.email ? user.email.split('@')[0] : 'you')}?`}
           </button>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 rounded-xl bg-[#6f6258] px-6 py-3 font-semibold text-[#fffaf4] shadow-md shadow-[#6f6258]/20 transition-colors hover:bg-[#5f554d]"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#6f6258] px-6 py-3 font-semibold text-[#fffaf4] shadow-md shadow-[#6f6258]/20 transition-colors hover:bg-[#5f554d] sm:w-auto"
           >
             <PenLine className="h-5 w-5" />
             Post It
@@ -121,7 +121,7 @@ export function Feed() {
       )}
 
       {!loading && posts.length === 0 && !error && (
-        <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-12 text-center shadow-[0_14px_42px_rgba(48,44,40,0.08)]">
+        <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-6 text-center shadow-[0_14px_42px_rgba(48,44,40,0.08)] sm:p-12">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#edede9] text-[#6f6258]">
             <PenLine className="h-8 w-8" />
           </div>
