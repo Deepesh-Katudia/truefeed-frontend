@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { postAPI, aiAPI, toAbsoluteUrl } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -15,6 +16,7 @@ const getErrorMessage = (error: unknown, fallback: string) =>
   error instanceof Error ? error.message : fallback;
 
 export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostModalProps) {
+  const [mounted, setMounted] = useState(false);
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>('');
@@ -24,7 +26,31 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
   const [checking, setChecking] = useState(false);
   const { user } = useAuth();
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen || typeof document === 'undefined') return;
+
+    const previousOverflow = document.body.style.overflow;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !loading) {
+        onClose();
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, loading, onClose]);
+
+  if (!isOpen || !mounted) return null;
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,16 +130,29 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#302c28]/45 p-4 backdrop-blur-sm">
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#302c28]/10 bg-[#fffaf4] shadow-[0_24px_70px_rgba(48,44,40,0.20)]">
+  const modal = (
+    <div
+      className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-[#edede9]/72 p-3 backdrop-blur-md sm:p-4"
+      role="presentation"
+      onMouseDown={() => {
+        if (!loading) onClose();
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-post-title"
+        onMouseDown={(event) => event.stopPropagation()}
+        className="max-h-[min(90vh,760px)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/95 shadow-[0_28px_80px_rgba(48,44,40,0.18)] backdrop-blur-xl"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#302c28]/10 p-6">
-          <h2 className="text-xl font-bold text-[#302c28]">Create Post</h2>
+        <div className="flex items-center justify-between border-b border-[#302c28]/10 p-5 sm:p-6">
+          <h2 id="create-post-title" className="text-xl font-bold text-[#302c28]">Create Post</h2>
           <button
             onClick={onClose}
             className="rounded-full p-2 transition-colors hover:bg-[#edede9]"
             disabled={loading}
+            aria-label="Close create post"
           >
             <X className="h-5 w-5 text-[#756b62]" />
           </button>
@@ -223,4 +262,6 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
