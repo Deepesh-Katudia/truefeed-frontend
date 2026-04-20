@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 
 import { friendsAPI, toAbsoluteUrl } from '@/lib/api';
 
@@ -24,15 +25,10 @@ export function Contacts() {
   const [list, setList] = useState<Contact[]>([]);
   const [error, setError] = useState('');
 
-  const load = async (query: string) => {
+  const load = useCallback(async (query: string) => {
     try {
       setLoading(true);
       const val = query.trim();
-      if (val.length < 2) {
-        setList([]);
-        setError('');
-        return;
-      }
       const data = await friendsAPI.search(val, 8);
       setList(data.results || []);
       setError('');
@@ -41,12 +37,12 @@ export function Contacts() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => load(q), 300);
     return () => clearTimeout(t);
-  }, [q]);
+  }, [q, load]);
 
   const sendRequest = async (targetUserId: string) => {
     try {
@@ -57,21 +53,30 @@ export function Contacts() {
         )
       );
     } catch (e: unknown) {
-      setError(getErrorMessage(e, 'Failed to send request'));
+      const msg = getErrorMessage(e, 'Failed to send request');
+      if (/already|pending/i.test(msg)) {
+        setList((prev) =>
+          prev.map((c) =>
+            c._id === targetUserId ? { ...c, outgoingPending: true } : c
+          )
+        );
+      } else {
+        setError(msg);
+      }
     }
   };
 
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase text-[#756b62]">Contacts</h3>
+        <h3 className="text-xs font-semibold uppercase text-[#756b62]">People</h3>
         <span className="text-xs text-[#8a7b70]">{list.length}</span>
       </div>
       <div className="mb-3">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search contacts"
+          placeholder="Search people"
           className="w-full rounded-lg border border-[#302c28]/10 bg-[#edede9] px-3 py-2 text-sm text-[#302c28] placeholder:text-[#756b62] focus:outline-none focus:ring-2 focus:ring-[#d6ccc2]"
         />
       </div>
@@ -89,7 +94,7 @@ export function Contacts() {
             const disabled = contact.isFriend || contact.outgoingPending || contact.incomingPending;
             return (
               <div key={contact._id} className="group flex items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
+                <Link href={`/profile/${contact._id}`} className="flex min-w-0 items-center gap-3">
                   <div className="relative">
                     <img
                       src={toAbsoluteUrl(contact.picture || undefined) || 'https://i.pravatar.cc/100?u=' + contact.email}
@@ -100,7 +105,7 @@ export function Contacts() {
                   <span className="max-w-[150px] truncate text-sm font-medium text-[#302c28]">
                     {contact.name || contact.email}
                   </span>
-                </div>
+                </Link>
                 <button
                   onClick={() => !disabled && sendRequest(contact._id)}
                   disabled={disabled}
@@ -117,7 +122,7 @@ export function Contacts() {
               </div>
             );
           })}
-          {list.length === 0 && <div className="text-xs text-[#756b62]">No contacts</div>}
+          {list.length === 0 && <div className="text-xs text-[#756b62]">No people found</div>}
         </div>
       )}
     </div>
