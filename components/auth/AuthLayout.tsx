@@ -8,77 +8,61 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-50 via-purple-50 to-blue-50">
-      {/* White outer frame */}
-      <div className="w-full max-w-6xl bg-white rounded-[2rem] shadow-2xl p-3">
-        
-        {/* Main card container */}
-        <div className="flex flex-col lg:flex-row rounded-[1.75rem] overflow-hidden bg-white shadow-lg min-h-[680px]">
-          
-          {/* LEFT GRADIENT PANEL - FULLY ROUNDED */}
-          <div className="lg:w-1/2 relative overflow-hidden rounded-[1.75rem]">
-            {/* Multi-layer gradient background */}
-            <div 
-              className="absolute inset-0"
-              style={{
-                background: `
-                  radial-gradient(circle at 15% 85%, #0f172a 0%, #1e3a8a 20%, transparent 50%),
-                  radial-gradient(circle at 20% 20%, #06b6d4 0%, #22d3ee 30%, transparent 60%),
-                  radial-gradient(circle at 80% 80%, #a855f7 0%, #c026d3 20%, transparent 55%),
-                  linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #7c3aed 100%)
-                `
-              }}
-            />
-            
-            {/* Content overlay */}
-            <div className="relative z-10 p-12 h-full flex flex-col justify-center text-white">
-              {/* Brand logo */}
-              <div className="mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl mb-6">
-                  <span className="text-white text-4xl font-bold">✱</span>
-                </div>
-                <div className="text-sm font-bold text-white/95 tracking-widest mb-2">TRUEFEED</div>
-              </div>
-              
-              {/* Tagline */}
-              <h2 className="text-4xl font-bold mb-4 leading-tight">
-                You can easily
-              </h2>
-              <p className="text-lg text-white/95 leading-relaxed max-w-md">
-                Get access your personal hub for clarity and productivity
-              </p>
-            </div>
-          </div>
+    <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(135deg,#edede9_0%,#f5ebe0_52%,#d6ccc2_100%)] p-4 text-[#302c28]">
+      <div className="w-full max-w-6xl rounded-[2rem] border border-[#302c28]/10 bg-[#fffaf4]/60 p-3 shadow-[0_24px_70px_rgba(48,44,40,0.13)] backdrop-blur-xl">
+        <div className="grid min-h-[680px] gap-4 rounded-[1.75rem] border border-[#302c28]/10 bg-[#f5ebe0]/85 p-4 shadow-[0_16px_48px_rgba(48,44,40,0.08)] lg:grid-cols-[minmax(320px,0.95fr)_minmax(360px,0.82fr)]">
+          <section className="relative flex min-h-[380px] overflow-hidden rounded-[1.35rem] border border-[#302c28]/10 bg-[linear-gradient(145deg,#d6ccc2_0%,#f5ebe0_58%,#edede9_100%)] p-8 sm:p-10">
+            <div className="pointer-events-none absolute inset-5 rounded-[1.15rem] border border-[#302c28]/10" />
 
-          {/* RIGHT FORM PANEL - NO ROUNDING (flat edge) */}
-          <div className="lg:w-1/2 p-8 sm:p-12 flex items-center justify-center bg-white">
-            <div className="w-full max-w-md">
-              
-              {/* TrueFeed branding + title */}
-              <div className="mb-10">
-                <div className="flex items-center gap-3 mb-6">
-                  <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-                    style={{
-                      background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)'
-                    }}
-                  >
-                    <span className="text-white text-2xl font-bold">✱</span>
+            <div className="relative z-10 flex h-full w-full flex-col justify-between gap-10">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 text-lg font-extrabold text-[#302c28] shadow-sm">
+                  T
+                </div>
+                <div>
+                  <div className="text-sm font-extrabold text-[#302c28]">TrueFeed</div>
+                  <div className="mt-0.5 text-xs text-[#756b62]">AI-powered social clarity</div>
+                </div>
+              </div>
+
+              <div className="max-w-md">
+                <h2 className="text-5xl font-extrabold leading-[0.98] tracking-normal text-[#302c28] sm:text-6xl">
+                  Read, post, and verify with calm focus.
+                </h2>
+                <p className="mt-5 max-w-sm text-sm leading-6 text-[#756b62] sm:text-base">
+                  A softer first impression for a production social app: less gradient noise,
+                  more trust, and a direct path back into the feed.
+                </p>
+              </div>
+
+              <div className="max-w-sm rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/70 p-4 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full border border-[#302c28]/10 bg-[#fffaf4]" />
+                  <div className="min-w-0 flex-1">
+                    <div className="h-2.5 w-24 rounded-full bg-[#302c28]/20" />
+                    <div className="mt-2 h-2.5 w-44 rounded-full bg-[#302c28]/15" />
                   </div>
                 </div>
-                
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <div className="mt-4 h-24 rounded-2xl border border-[#302c28]/10 bg-[linear-gradient(135deg,#d6ccc2,#f5ebe0)]" />
+                <div className="mt-4 h-2.5 w-2/3 rounded-full bg-[#302c28]/15" />
+              </div>
+            </div>
+          </section>
+
+          <section className="flex items-center justify-center rounded-[1.35rem] border border-[#302c28]/10 bg-[#fffaf4]/75 p-6 shadow-[0_16px_48px_rgba(48,44,40,0.07)] sm:p-8">
+            <div className="w-full max-w-md rounded-3xl border border-[#302c28]/10 bg-[#fffaf4]/85 p-7 shadow-[0_14px_42px_rgba(48,44,40,0.07)] sm:p-8">
+              <div className="mb-7">
+                <h1 className="text-3xl font-extrabold leading-tight text-[#302c28]">
                   {title}
                 </h1>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="mt-2 text-sm leading-6 text-[#756b62]">
                   {subtitle}
                 </p>
               </div>
 
-              {/* Form content */}
               {children}
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>
