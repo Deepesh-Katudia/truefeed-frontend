@@ -139,9 +139,11 @@ export default function PeoplePage() {
 
   const directoryLabel = useMemo(() => {
     const trimmed = q.trim();
-    if (!trimmed) return 'Showing database profiles';
-    return `Results for "${trimmed}"`;
-  }, [q]);
+    const count = list.length;
+    const profileLabel = count === 1 ? 'profile' : 'profiles';
+    if (!trimmed) return `Showing ${count} ${profileLabel}`;
+    return `Showing ${count} ${profileLabel} for "${trimmed}"`;
+  }, [q, list.length]);
 
   if (loading || !user) {
     return (
@@ -183,7 +185,7 @@ export default function PeoplePage() {
               className="overflow-hidden rounded-3xl border border-[#302c28]/10 bg-[#fffaf4]/75 shadow-[0_24px_70px_rgba(48,44,40,0.12)] backdrop-blur-xl"
             >
               <div className="h-1 w-full bg-[#d6ccc2]" />
-              <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[1fr_24rem] lg:items-end">
+              <div className="p-5 sm:p-6">
                 <div>
                   <div className="mb-3 inline-flex items-center gap-2 rounded-2xl border border-[#302c28]/10 bg-[#f5ebe0]/80 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#756b62]">
                     <Users className="h-4 w-4" />
@@ -193,23 +195,8 @@ export default function PeoplePage() {
                     Find members across TrueFeed.
                   </h1>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-[#5f554d] sm:text-base">
-                    Search database profiles, open member pages, and send friend requests without leaving the directory.
+                    Search member profiles, open profile pages, and send friend requests from one clean workspace.
                   </p>
-                </div>
-
-                <div className="rounded-2xl border border-[#302c28]/10 bg-[#f5ebe0]/75 p-4 shadow-sm">
-                  <div className="text-xs font-semibold uppercase tracking-[0.14em] text-[#756b62]">
-                    Directory status
-                  </div>
-                  <div className="mt-2 flex items-end justify-between gap-4">
-                    <div>
-                      <div className="text-3xl font-bold text-[#302c28]">{list.length}</div>
-                      <div className="text-sm text-[#756b62]">visible profiles</div>
-                    </div>
-                    <div className="rounded-2xl bg-[#d6ccc2]/80 px-3 py-2 text-sm font-semibold text-[#5f554d]">
-                      Live database
-                    </div>
-                  </div>
                 </div>
               </div>
             </motion.section>
