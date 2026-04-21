@@ -187,6 +187,7 @@ export function StoryBar() {
               nextGroups = [newGroup, ...prev];
             }
             const g = nextGroups.find((x) => String(x.user._id) === uid) || null;
+            setViewerStartIdx(0);
             setViewerGroup(g);
             return nextGroups;
           });
@@ -219,12 +220,18 @@ export function StoryBar() {
           }).catch(() => {});
         }}
       />
-      <StoryViewer
-        group={viewerGroup}
-        initialIndex={viewerStartIdx}
-        onClose={() => setViewerGroup(null)}
-        onViewed={(id) => storiesAPI.markViewed(id)}
-      />
+      {viewerGroup && (
+        <StoryViewer
+          key={`${viewerGroup.user._id}-${viewerStartIdx}`}
+          group={viewerGroup}
+          groups={groups}
+          initialIndex={viewerStartIdx}
+          onClose={() => setViewerGroup(null)}
+          onViewed={(id) => {
+            void storiesAPI.markViewed(id);
+          }}
+        />
+      )}
     </div>
   );
 }
