@@ -21,6 +21,7 @@ export default function SignupPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -41,12 +42,18 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setApiError('');
+    setSuccessMessage('');
     if (!validateForm()) return;
     setLoading(true);
 
     try {
       const result = await signup(formData.email, formData.password, formData.name);
       if (result.success) {
+        const message = 'User signed up successfully.';
+        setSuccessMessage(message);
+        if (typeof window !== 'undefined') {
+          window.sessionStorage.setItem('truefeed_signup_success', message);
+        }
         router.push('/dashboard');
       } else {
         setApiError(result.error || 'Signup failed');
@@ -65,6 +72,7 @@ export default function SignupPage() {
       setErrors((prev) => ({ ...prev, [name]: '' }));
     }
     setApiError('');
+    setSuccessMessage('');
   };
 
   return (
@@ -76,6 +84,12 @@ export default function SignupPage() {
         {apiError && (
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {apiError}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            {successMessage}
           </div>
         )}
 

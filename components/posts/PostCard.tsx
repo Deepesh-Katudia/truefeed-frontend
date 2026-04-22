@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { AlertTriangle, Heart, MessageSquare, MoreVertical, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-import { getFileUrl, postAPI, toAbsoluteUrl } from '@/lib/api';
+import { getFileUrl, postAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface Post {
   _id: string;
@@ -79,10 +80,11 @@ export function PostCard({ post }: PostCardProps) {
       <div className="p-4 pb-4 sm:p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <img
-              src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
+            <ProfileAvatar
+              src={user?.picture}
               alt={user?.name || user?.email || 'User'}
               className="h-10 w-10 rounded-full border border-[#302c28]/10 object-cover sm:h-12 sm:w-12"
+              iconClassName="h-5 w-5 sm:h-6 sm:w-6"
             />
             <div className="min-w-0">
               <h3 className="truncate font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</h3>

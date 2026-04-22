@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Home, Users, Image, FileText, User, Settings, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 export function ProfileSidebar() {
   const [activeItem, setActiveItem] = useState('Profile');
@@ -51,10 +52,11 @@ export function ProfileSidebar() {
         className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 -mx-3 px-3 py-2 rounded-lg transition-colors"
         onClick={() => router.push('/profile')}
       >
-        <img
-          src={user?.picture || `https://i.pravatar.cc/150?u=${user?.email || 'default'}`}
+        <ProfileAvatar
+          src={user?.picture}
           alt={user?.name || user?.email || 'User'}
-          className="w-12 h-12 rounded-full"
+          className="h-12 w-12 rounded-full object-cover"
+          iconClassName="h-6 w-6"
         />
         <div className="flex-1">
           <div className="font-semibold text-gray-900">
@@ -124,10 +126,11 @@ export function ProfileSidebar() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <div className="flex items-center gap-2 mb-2">
-              <img
-                src="https://i.pravatar.cc/40?u=invitation"
+              <ProfileAvatar
+                src={null}
                 alt="User"
-                className="w-8 h-8 rounded-full border-2 border-white"
+                className="h-8 w-8 rounded-full border-2 border-white object-cover"
+                iconClassName="h-4 w-4"
               />
             </div>
             <h3 className="text-white font-bold text-sm mb-1">How To Build A Strong Company</h3>

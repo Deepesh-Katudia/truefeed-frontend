@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 import { toAbsoluteUrl } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface StoryItem {
   _id: string;
@@ -87,9 +88,6 @@ export function StoryViewer({
   const activeIndex = activeGroup ? clampIndex(viewerState.index, activeGroup.items.length) : 0;
   const activeItem = activeGroup?.items[activeIndex] || null;
   const activeUserName = activeGroup?.user.name || activeGroup?.user.email || 'Story';
-  const activeUserAvatar =
-    toAbsoluteUrl(activeGroup?.user.picture || undefined) ||
-    `https://i.pravatar.cc/100?u=${activeGroup?.user.email || activeGroup?.user._id || 'story'}`;
   const mediaUrl = activeItem ? toAbsoluteUrl(activeItem.mediaUrl) : '';
 
   useEffect(() => {
@@ -226,10 +224,11 @@ export function StoryViewer({
 
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-3">
-              <img
-                src={activeUserAvatar}
+              <ProfileAvatar
+                src={activeGroup.user.picture}
                 alt={activeUserName}
                 className="h-10 w-10 flex-shrink-0 rounded-full border border-[#fffaf4]/65 object-cover"
+                iconClassName="h-5 w-5"
               />
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold leading-tight text-[#fffaf4]">{activeUserName}</p>

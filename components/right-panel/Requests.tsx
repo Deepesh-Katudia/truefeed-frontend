@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { authAPI, friendsAPI } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface IncomingRequest {
   _id: string;
@@ -77,10 +78,11 @@ export function Requests() {
         <div className="space-y-4">
           {list.map((u) => (
             <div key={u._id} className="flex items-start gap-3">
-              <img
-                src={u.picture || 'https://i.pravatar.cc/100?u=' + u.email}
-                alt={u.name}
+              <ProfileAvatar
+                src={u.picture}
+                alt={u.name || u.email}
                 className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
+                iconClassName="h-6 w-6"
               />
               <div className="flex-1">
                 <h4 className="mb-1 text-sm font-semibold text-[#302c28]">{u.name || u.email}</h4>

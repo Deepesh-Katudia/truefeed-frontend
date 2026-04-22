@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { useAuth } from '@/context/AuthContext';
 import { profileAPI, toAbsoluteUrl } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface User {
   _id?: string;
@@ -174,18 +175,11 @@ export function EditProfileModal({ isOpen, onClose, onSuccess, currentUser }: Ed
 
                 <div className="flex items-center gap-6">
                   <div className="relative">
-                    <img
-                      src={
-                        preview ||
-                        (() => {
-                          const abs = toAbsoluteUrl(currentUser.picture) || '';
-                          if (!abs) return `https://i.pravatar.cc/150?u=${currentUser.email}`;
-                          const sep = abs.includes('?') ? '&' : '?';
-                          return `${abs}${sep}t=${Date.now()}`;
-                        })()
-                      }
+                    <ProfileAvatar
+                      src={preview}
                       alt="Profile"
                       className="h-24 w-24 rounded-2xl border border-[#302c28]/10 object-cover shadow-md shadow-[#302c28]/5"
+                      iconClassName="h-12 w-12"
                     />
 
                     <label className="absolute -bottom-2 -right-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-2xl bg-[#6f6258] shadow-lg shadow-[#6f6258]/20 transition hover:bg-[#5f554d]">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -20,6 +20,7 @@ import { useAuth } from '@/context/AuthContext';
 import { friendsAPI, toAbsoluteUrl, usersAPI } from '@/lib/api';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface TargetUser {
   _id?: string;
@@ -146,13 +147,6 @@ export default function UserProfilePage() {
     };
   }, [loading, user, userId]);
 
-  const avatarSrc = useMemo(() => {
-    return (
-      toAbsoluteUrl(target?.picture || undefined) ||
-      `https://i.pravatar.cc/160?u=${encodeURIComponent(target?.email || 'user')}`
-    );
-  }, [target?.picture, target?.email]);
-
   const sendRequest = async () => {
     const targetId = target?._id || target?.id;
     if (!targetId) return;
@@ -260,10 +254,11 @@ export default function UserProfilePage() {
                     <div className="-mt-12 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                       <div className="flex min-w-0 items-end gap-4">
                         <div className="rounded-3xl bg-[#fffaf4]/85 p-1.5 shadow-lg shadow-[#302c28]/10 backdrop-blur">
-                          <img
-                            src={avatarSrc}
+                          <ProfileAvatar
+                            src={target.picture}
                             alt={target.name || target.email || 'Profile'}
                             className="h-24 w-24 rounded-2xl object-cover ring-1 ring-[#302c28]/10 sm:h-28 sm:w-28"
+                            iconClassName="h-12 w-12 sm:h-14 sm:w-14"
                           />
                         </div>
 

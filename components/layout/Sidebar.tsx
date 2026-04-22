@@ -3,8 +3,8 @@
 import { Users, FileText, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
-import { toAbsoluteUrl } from "@/lib/api";
 import { motion } from "framer-motion";
+import { ProfileAvatar } from "@/components/ui/ProfileAvatar";
 
 export function Sidebar() {
   const { user, logout } = useAuth();
@@ -65,13 +65,11 @@ export function Sidebar() {
           onClick={() => router.push("/profile")}
           className="mx-5 mt-5 flex items-center gap-3 rounded-2xl border border-[#302c28]/10 bg-[#f5ebe0]/80 px-3 py-3 text-left shadow-md shadow-[#302c28]/5 transition hover:bg-[#fffaf4]"
         >
-          <img
-            src={
-              toAbsoluteUrl(user?.picture) ||
-              `https://i.pravatar.cc/150?u=${user?.email || "default"}`
-            }
+          <ProfileAvatar
+            src={user?.picture}
             alt={user?.name || user?.email || "User"}
             className="h-12 w-12 rounded-xl border border-[#302c28]/10 object-cover"
+            iconClassName="h-6 w-6"
           />
           <div className="min-w-0">
             <div className="truncate font-semibold text-[#302c28]">

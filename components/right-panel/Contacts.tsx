@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { friendsAPI, toAbsoluteUrl } from '@/lib/api';
+import { friendsAPI } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface Contact {
   _id: string;
@@ -96,10 +97,11 @@ export function Contacts() {
               <div key={contact._id} className="group flex items-center justify-between gap-3">
                 <Link href={`/profile/${contact._id}`} className="flex min-w-0 items-center gap-3">
                   <div className="relative">
-                    <img
-                      src={toAbsoluteUrl(contact.picture || undefined) || 'https://i.pravatar.cc/100?u=' + contact.email}
+                    <ProfileAvatar
+                      src={contact.picture}
                       alt={contact.name}
                       className="h-10 w-10 rounded-full border border-[#302c28]/10 object-cover"
+                      iconClassName="h-5 w-5"
                     />
                   </div>
                   <span className="max-w-[150px] truncate text-sm font-medium text-[#302c28]">

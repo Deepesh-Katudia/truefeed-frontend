@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { Loader2, PenLine, RefreshCw } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
-import { postAPI, toAbsoluteUrl } from '@/lib/api';
+import { postAPI } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { CreatePostModal } from './CreatePostModal';
 import { PostCard } from './PostCard';
 
@@ -72,10 +73,11 @@ export function Feed() {
     <div className="space-y-4 sm:space-y-6">
       <div className="rounded-2xl border border-[#302c28]/10 bg-[#fffaf4]/80 p-4 shadow-[0_14px_42px_rgba(48,44,40,0.08)] sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <img
-            src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
+          <ProfileAvatar
+            src={user?.picture}
             alt={user?.name || user?.email || 'User'}
             className="h-11 w-11 rounded-full border border-[#302c28]/10 object-cover sm:h-12 sm:w-12"
+            iconClassName="h-5 w-5 sm:h-6 sm:w-6"
           />
           <button
             onClick={() => setShowCreateModal(true)}

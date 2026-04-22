@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { postAPI, aiAPI, toAbsoluteUrl } from '@/lib/api';
+import { postAPI, aiAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -162,10 +163,11 @@ export function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostMo
         <div className="p-6">
           {/* User Info */}
           <div className="flex items-center gap-3 mb-4">
-            <img
-              src={toAbsoluteUrl(user?.picture) || `https://i.pravatar.cc/150?u=${user?.email || 'user'}`}
+            <ProfileAvatar
+              src={user?.picture}
               alt={user?.name || user?.email || 'User'}
               className="h-12 w-12 rounded-full border border-[#302c28]/10 object-cover"
+              iconClassName="h-6 w-6"
             />
             <div>
               <div className="font-semibold text-[#302c28]">{user?.name || user?.email || 'User'}</div>

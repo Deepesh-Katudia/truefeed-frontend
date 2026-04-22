@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Sidebar } from '../layout/Sidebar';
 import { MobileNav } from '../layout/MobileNav';
 import { postAPI, toAbsoluteUrl } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { EditProfileModal } from './EditProfileModal';
 
 interface User {
@@ -56,8 +57,8 @@ export function ProfileContent({ user }: ProfileContentProps) {
       const sep = base.includes('?') ? '&' : '?';
       return `${base}${sep}v=${Date.now()}`;
     }
-    return `https://i.pravatar.cc/120?u=${me?.email || 'user'}`;
-  }, [me?.picture, me?.email]);
+    return '';
+  }, [me?.picture]);
 
   useEffect(() => {
     const load = async () => {
@@ -113,10 +114,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           className="-mt-10 sm:-mt-12"
                         >
                           <div className="rounded-3xl bg-[#fffaf4]/80 p-1.5 shadow-lg shadow-[#302c28]/10 backdrop-blur">
-                            <img
+                            <ProfileAvatar
                               src={avatarSrc}
-                              alt={me?.name || me?.email}
+                              alt={me?.name || me?.email || 'Profile'}
                               className="h-20 w-20 rounded-2xl object-cover ring-1 ring-[#302c28]/10 sm:h-24 sm:w-24"
+                              iconClassName="h-10 w-10 sm:h-12 sm:w-12"
                             />
                           </div>
                         </motion.div>
@@ -245,10 +247,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                           >
                             <div className="p-5 sm:p-6">
                               <div className="mb-3 flex items-center gap-3">
-                                <img
+                                <ProfileAvatar
                                   src={avatarSrc}
-                                  alt={me?.name || me?.email}
+                                  alt={me?.name || me?.email || 'Profile'}
                                   className="h-10 w-10 rounded-2xl object-cover ring-1 ring-[#302c28]/10"
+                                  iconClassName="h-5 w-5"
                                 />
                                 <div className="min-w-0 flex-1">
                                   <div className="truncate font-semibold text-[#302c28]">

@@ -7,9 +7,10 @@ import { ArrowRight, Check, Clock3, Loader2, Search, UserPlus, Users } from 'luc
 import { motion } from 'framer-motion';
 
 import { useAuth } from '@/context/AuthContext';
-import { friendsAPI, toAbsoluteUrl } from '@/lib/api';
+import { friendsAPI } from '@/lib/api';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 
 interface Person {
   _id: string;
@@ -31,13 +32,6 @@ const fadeUp = {
 };
 
 const softSpring = { type: 'spring' as const, stiffness: 260, damping: 24 };
-
-function getAvatar(person: Person) {
-  return (
-    toAbsoluteUrl(person.picture || undefined) ||
-    `https://i.pravatar.cc/120?u=${encodeURIComponent(person.email)}`
-  );
-}
 
 function getRelation(person: Person) {
   if (person.isFriend) {
@@ -266,10 +260,11 @@ export default function PeoplePage() {
                     <div className="p-5">
                       <div className="flex items-start gap-4">
                         <Link href={`/profile/${person._id}`} className="shrink-0">
-                          <img
-                            src={getAvatar(person)}
+                          <ProfileAvatar
+                            src={person.picture}
                             alt={person.name || person.email}
                             className="h-16 w-16 rounded-2xl border border-[#302c28]/10 object-cover shadow-sm"
+                            iconClassName="h-8 w-8"
                           />
                         </Link>
 

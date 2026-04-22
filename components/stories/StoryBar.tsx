@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { useAuth } from '@/context/AuthContext';
 import { storiesAPI, toAbsoluteUrl } from '@/lib/api';
+import { ProfileAvatar } from '@/components/ui/ProfileAvatar';
 import { StoryCreateModal } from './StoryCreateModal';
 import { StoryViewer } from './StoryViewer';
 
@@ -59,10 +60,11 @@ export function StoryBar() {
         <img src={bgSrc} alt={g.user.name || g.user.email || 'Story'} className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#302c28]/55 via-transparent to-transparent" />
         <div className="absolute left-3 top-3">
-          <img
-            src={toAbsoluteUrl(g.user.picture || undefined) || 'https://i.pravatar.cc/100?u=' + (g.user.email || g.user._id)}
+          <ProfileAvatar
+            src={g.user.picture}
             alt={g.user.name || g.user.email || 'User'}
             className="h-8 w-8 rounded-full border-2 border-[#fffaf4] object-cover sm:h-10 sm:w-10"
+            iconClassName="h-4 w-4 sm:h-5 sm:w-5"
           />
         </div>
         <div className="absolute bottom-3 left-3 right-3">
@@ -107,7 +109,7 @@ export function StoryBar() {
               return g.items.map((it, index) => {
                 const bgSrc =
                   (it.mediaType === 'image' && toAbsoluteUrl(it.mediaUrl)) ||
-                  g.user.picture ||
+                  toAbsoluteUrl(g.user.picture || undefined) ||
                   'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
 
                 return renderStoryCard(
@@ -125,7 +127,7 @@ export function StoryBar() {
             const firstWithMedia = g.items.find((it) => it.mediaType === 'image') || g.items[0];
             const bgSrc =
               (firstWithMedia && firstWithMedia.mediaType === 'image' && toAbsoluteUrl(firstWithMedia.mediaUrl)) ||
-              g.user.picture ||
+              toAbsoluteUrl(g.user.picture || undefined) ||
               'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=300&h=400&fit=crop';
 
             return [

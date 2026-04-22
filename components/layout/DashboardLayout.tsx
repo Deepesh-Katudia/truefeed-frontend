@@ -1,13 +1,15 @@
 import { Sidebar } from "./Sidebar";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { toAbsoluteUrl } from "@/lib/api";
+import { CheckCircle2 } from "lucide-react";
+import { ProfileAvatar } from "@/components/ui/ProfileAvatar";
 import { StoryBar } from "../stories/StoryBar";
 import { Feed } from "../posts/Feed";
 import { Requests } from "../right-panel/Requests";
 import { Contacts } from "../right-panel/Contacts";
 import { MobileNav } from "./MobileNav";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 14 },
@@ -21,6 +23,23 @@ const stagger = {
 
 export function DashboardLayout() {
   const { user } = useAuth();
+  const [signupNotice, setSignupNotice] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const message = window.sessionStorage.getItem("truefeed_signup_success");
+    if (!message) return;
+
+    window.sessionStorage.removeItem("truefeed_signup_success");
+
+    const showTimeoutId = window.setTimeout(() => setSignupNotice(message), 0);
+    const hideTimeoutId = window.setTimeout(() => setSignupNotice(""), 4500);
+    return () => {
+      window.clearTimeout(showTimeoutId);
+      window.clearTimeout(hideTimeoutId);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen pb-24 text-[#302c28] lg:pb-0">
@@ -34,6 +53,22 @@ export function DashboardLayout() {
           backgroundSize: "34px 34px",
         }}
       />
+
+      <AnimatePresence>
+        {signupNotice && (
+          <motion.div
+            initial={{ opacity: 0, y: -16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.98 }}
+            style={{ x: "-50%" }}
+            className="fixed left-1/2 top-4 z-[130] flex w-[calc(100%-2rem)] max-w-md items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 shadow-[0_18px_45px_rgba(48,44,40,0.16)]"
+            role="status"
+          >
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+            <span>{signupNotice}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="mx-auto flex max-w-[1920px] gap-6 px-3 sm:px-4 lg:px-0">
         {/* Left Sidebar */}
@@ -94,16 +129,17 @@ export function DashboardLayout() {
                     </motion.button>
 
                     <Link href="/profile">
-                      <motion.img
+                      <motion.div
                         whileHover={{ y: -2, rotate: 1 }}
                         whileTap={{ scale: 0.98 }}
-                        src={
-                          toAbsoluteUrl(user?.picture) ||
-                          `https://i.pravatar.cc/150?u=${user?.email || "user"}`
-                        }
-                        alt={user?.name || user?.email || "Profile"}
-                        className="h-10 w-10 cursor-pointer rounded-full border-2 border-[#d6ccc2] shadow-sm transition hover:-translate-y-0.5"
-                      />
+                      >
+                        <ProfileAvatar
+                          src={user?.picture}
+                          alt={user?.name || user?.email || "Profile"}
+                          className="h-10 w-10 cursor-pointer rounded-full border-2 border-[#d6ccc2] object-cover shadow-sm transition hover:-translate-y-0.5"
+                          iconClassName="h-5 w-5"
+                        />
+                      </motion.div>
                     </Link>
                   </div>
                 </div>
